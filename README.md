@@ -9,7 +9,7 @@ can load these urls using a combination of the following:
 ## Requirements
 
 - download the latest stable binary for your OS from 
-https://github.com/pemcconnell/appengine-authstatus/releases/ 
+https://github.com/pemcconnell/amald/releases/ 
 
 
 ## Config
@@ -45,10 +45,10 @@ moment
 You can run this tool however you like. Something like a cronjob would be 
 useful. Here is an example of the ASCII output:
 
-![manually ran in terminal](https://sourceforge.net/p/authstatus/screenshot/ascii.png)
+![manually ran in terminal](https://cloud.githubusercontent.com/assets/641429/6888122/aace0360-d66b-11e4-8a81-89049ea358b8.png)
 
 You can enable email reports using the mailgun feature, via `config.yaml`:
 
-![email output](https://sourceforge.net/p/authstatus/screenshot/mailgun.png)
+![email output](https://cloud.githubusercontent.com/assets/641429/6888121/aab6f7d8-d66b-11e4-8a5d-17389d55ac8d.png)
 
 PR's welcome :)
