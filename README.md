@@ -52,3 +52,6 @@ You can enable email reports using the mailgun feature, via `config.yaml`:
 ![email output](https://cloud.githubusercontent.com/assets/641429/6888121/aab6f7d8-d66b-11e4-8a5d-17389d55ac8d.png)
 
 PR's welcome :)
+
+
+~ amald == are my apps locked down?
