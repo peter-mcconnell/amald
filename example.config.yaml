@@ -1,0 +1,12 @@
+activeloaders:
+#  gcloudcli: ~
+  textfile: 
+    path: "urls.txt"
+reports:
+  ascii: ~
+  mailgun:
+    privatekey: "api:something"
+    domain: "something.com"
+    from: "Lockdown Tracker <postmaster@something.com>"
+    to: "Sysadmins <sysadmin@something.com>"
+    subj: "Lockdown status report"
