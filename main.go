@@ -58,7 +58,7 @@ func main() {
 
 	// call the notifiers to display/send the messages
 	err = notifiers.FireNotifiers(urls, config.Reports)
-	exitOnError(err, "Failed to GetNotifier()")
+	exitOnError(err, "Failed to FireNotifiers()")
 }
 
 // exitOnError checks that and error is not nil. If the passed value is an
