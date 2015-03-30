@@ -59,15 +59,6 @@ func main() {
 	// call the notifiers to display/send the messages
 	err = notifiers.FireNotifiers(urls, config.Reports)
 	exitOnError(err, "Failed to GetNotifier()")
-	//notifier.Send(config.Notifiers, message)
-
-	// grab the reports
-	//report, err := reports.GetReport(urls)
-	//exitOnError(err, "Failed to GetReport()")
-	//message, err := report.GenerateHTML()
-	//log.Info(message)
-	//exitOnError(err, "Failed to GenerateHTML()")
-
 }
 
 // exitOnError checks that and error is not nil. If the passed value is an
