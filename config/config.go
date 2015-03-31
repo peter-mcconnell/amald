@@ -11,6 +11,7 @@ import (
 type Config struct {
 	ActiveLoaders map[string]map[string]string `json:activeloaders,omitempty`
 	Reports       map[string]map[string]string `json:reports,omitempty`
+	Storage       map[string]map[string]string `json:storage,omitempty`
 }
 
 // LoadConfig returns a Config struct. It builds the config using the provided

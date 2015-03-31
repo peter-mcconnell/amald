@@ -6,6 +6,7 @@ import (
 	config "github.com/pemcconnell/amald/config"
 	"github.com/pemcconnell/amald/loaders"
 	"github.com/pemcconnell/amald/notifiers"
+	"github.com/pemcconnell/amald/storage"
 )
 
 const (
@@ -55,6 +56,10 @@ func main() {
 	// collect up some urls from the loaders
 	urls := loaders.CollectUrls()
 	exitOnError(err, "Failed to exec loaders")
+
+	// storage
+	err = storage.StoreData(urls, config.Storage)
+	exitOnError(err, "Failed to StoreData")
 
 	// call the notifiers to display/send the messages
 	err = notifiers.FireNotifiers(urls, config.Reports)

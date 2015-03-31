@@ -26,3 +26,4 @@ _testmain.go
 config.yaml
 urls.txt
 amald
+tmp/

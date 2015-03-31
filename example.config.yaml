@@ -10,3 +10,6 @@ reports:
     from: "Lockdown Tracker <postmaster@something.com>"
     to: "Sysadmins <sysadmin@something.com>"
     subj: "Lockdown status report"
+storage:
+  json:
+    path: "./tmp/data.json" # folder must exist

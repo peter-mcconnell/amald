@@ -5,8 +5,8 @@ import (
 )
 
 type SiteDefinition struct {
-	Url          string
-	IsLockedDown bool
+	Url          string `json:"url"`
+	IsLockedDown bool   `json:"islockeddown"`
 }
 
 type UrlsLoader interface {
