@@ -3,6 +3,7 @@ package loaders
 import (
 	"bufio"
 	log "github.com/Sirupsen/logrus"
+	"github.com/pemcconnell/amald/defs"
 	"github.com/pemcconnell/amald/urltest"
 	"os"
 	"path/filepath"
@@ -29,8 +30,8 @@ func textfileLoaderAvailable(settings map[string]string) bool {
 
 // ScanUrls calls some Gcloud CLI commands, parses the output & then checks
 // the url using authtest
-func (l *LoaderTextfile) FetchUrls() []SiteDefinition {
-	m := []SiteDefinition{}
+func (l *LoaderTextfile) FetchUrls() []defs.SiteDefinition {
+	m := []defs.SiteDefinition{}
 	file, err := os.Open(textfile_path)
 	if err != nil {
 		log.Fatal(err)
@@ -44,7 +45,7 @@ func (l *LoaderTextfile) FetchUrls() []SiteDefinition {
 		if err != nil {
 			log.WithFields(log.Fields{"url": url}).Fatal(err)
 		}
-		m = append(m, SiteDefinition{Url: url, IsLockedDown: lockeddown})
+		m = append(m, defs.SiteDefinition{Url: url, IsLockedDown: lockeddown})
 	}
 
 	if err := scanner.Err(); err != nil {

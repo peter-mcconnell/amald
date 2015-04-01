@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	log "github.com/Sirupsen/logrus"
-	"github.com/pemcconnell/amald/loaders"
+	"github.com/pemcconnell/amald/defs"
 	"strings"
 )
 
@@ -12,41 +12,33 @@ type NotifierLoader interface {
 	Send(map[string]map[string]string, string)
 }
 
-type JsonData struct {
-	Meta map[string]string        `json:"Meta"`
-	Data []loaders.SiteDefinition `json:"Data"`
-}
-
 func FireNotifiers(jsonbytes []byte,
 	activeloaders map[string]map[string]string) error {
 
 	data, err := loadData(jsonbytes)
-
-	// Data from the first item forms the active report
-	urls := data[0].Data
 	if err != nil {
 		log.Fatalf("there was a problem loading the existing data: %s", err)
 	}
 
 	// check to see if ascii has been specified in the config
 	if _, ok := activeloaders["ascii"]; ok {
-		n := &NotifierAscii{urls: urls}
+		n := &NotifierAscii{data: data}
 		n.Send()
 	}
 
 	// check to see if mailgun has been specified in the config
 	if _, ok := activeloaders["mailgun"]; ok {
-		n := &NotifierMailgun{urls: urls}
+		n := &NotifierMailgun{data: data}
 		n.Send(activeloaders["mailgun"])
 	}
 
 	return nil
 }
 
-func loadData(jsonbytes []byte) ([]JsonData, error) {
+func loadData(jsonbytes []byte) ([]defs.JsonData, error) {
 	var (
-		datalist []JsonData
-		data     JsonData
+		datalist []defs.JsonData
+		data     defs.JsonData
 		err      error
 	)
 

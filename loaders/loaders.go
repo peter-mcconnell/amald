@@ -2,15 +2,11 @@ package loaders
 
 import (
 	log "github.com/Sirupsen/logrus"
+	"github.com/pemcconnell/amald/defs"
 )
 
-type SiteDefinition struct {
-	Url          string `json:"url"`
-	IsLockedDown bool   `json:"islockeddown"`
-}
-
 type UrlsLoader interface {
-	FetchUrls() []SiteDefinition
+	FetchUrls() []defs.SiteDefinition
 }
 
 var (
@@ -42,8 +38,8 @@ func GetLoaders(activeloaders map[string]map[string]string) error {
 }
 
 // Collect URL information from each of the loaders
-func CollectUrls() ([]SiteDefinition, error) {
-	m := []SiteDefinition{}
+func CollectUrls() ([]defs.SiteDefinition, error) {
+	m := []defs.SiteDefinition{}
 	for _, loader := range loaders {
 		m = append(m, loader.FetchUrls()...)
 	}

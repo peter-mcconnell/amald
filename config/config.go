@@ -2,25 +2,20 @@ package config
 
 import (
 	log "github.com/Sirupsen/logrus"
+	"github.com/pemcconnell/amald/defs"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 )
 
-type Config struct {
-	ActiveLoaders map[string]map[string]string `json:activeloaders,omitempty`
-	Reports       map[string]map[string]string `json:reports,omitempty`
-	Storage       map[string]map[string]string `json:storage,omitempty`
-}
-
 // LoadConfig returns a Config struct. It builds the config using the provided
 // filepath. loadDefaults called after the yaml file is scanned to assign
 // defaults if they are needed.
-func LoadConfig(path string) (Config, error) {
+func LoadConfig(path string) (defs.Config, error) {
 
 	var (
-		config Config
+		config defs.Config
 	)
 
 	// does file exist?
@@ -49,6 +44,6 @@ func LoadConfig(path string) (Config, error) {
 
 // loadDefaults is a placeholder at the moment. If default values are to be set
 // to cover missing fields from the config yaml then they should be set here.
-func loadDefaults(config Config) (Config, error) {
+func loadDefaults(config defs.Config) (defs.Config, error) {
 	return config, nil
 }

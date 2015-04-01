@@ -3,6 +3,7 @@ package loaders
 import (
 	"bytes"
 	log "github.com/Sirupsen/logrus"
+	"github.com/pemcconnell/amald/defs"
 	"github.com/pemcconnell/amald/urltest"
 	"os/exec"
 	"regexp"
@@ -76,12 +77,12 @@ func parseModulesOutput(data string) string {
 
 // ScanUrls calls some Gcloud CLI commands, parses the output & then checks
 // the url using authtest
-func (l *LoaderGcloudCLI) FetchUrls() []SiteDefinition {
+func (l *LoaderGcloudCLI) FetchUrls() []defs.SiteDefinition {
 	projectstring := execGcloudProjects()
 	data := parseProjectsOutput(projectstring)
 	projectsraw := strings.Split(data, "\n")
 	projects := projectsraw[1 : len(projectsraw)-1]
-	m := []SiteDefinition{}
+	m := []defs.SiteDefinition{}
 	for _, project := range projects {
 		modules := execGcloudModules(project)
 		versionsraw := strings.Split(parseModulesOutput(modules), "\n")
@@ -99,7 +100,7 @@ func (l *LoaderGcloudCLI) FetchUrls() []SiteDefinition {
 					if err != nil {
 						log.WithFields(log.Fields{"url": url}).Fatal(err)
 					}
-					m = append(m, SiteDefinition{Url: url, IsLockedDown: lockeddown})
+					m = append(m, defs.SiteDefinition{Url: url, IsLockedDown: lockeddown})
 					versionscache[version] = true
 				}
 			}

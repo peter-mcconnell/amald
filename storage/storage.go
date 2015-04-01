@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	log "github.com/Sirupsen/logrus"
-	"github.com/pemcconnell/amald/loaders"
+	"github.com/pemcconnell/amald/defs"
 	"io/ioutil"
 	"os"
 	"strconv"
@@ -12,13 +12,13 @@ import (
 )
 
 var (
-	urls        []loaders.SiteDefinition
+	urls        []defs.SiteDefinition
 	recordLimit int = 100 // default value (if not set in config)
 )
 
 // StoreData adds a new entry of urls to the specified json file. It returns
 // a byte array of ALL records and an error type
-func StoreData(passedurls []loaders.SiteDefinition,
+func StoreData(passedurls []defs.SiteDefinition,
 	config map[string]map[string]string) ([]byte, error) {
 	urls = passedurls
 	var (
@@ -57,7 +57,7 @@ func jsonStoreData(config map[string]string) ([]byte, error) {
 	// marshal data
 	jstr, err := json.Marshal(struct {
 		Meta map[string]string
-		Data []loaders.SiteDefinition
+		Data []defs.SiteDefinition
 	}{
 		Meta: meta,
 		Data: urls,

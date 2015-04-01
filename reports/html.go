@@ -3,11 +3,11 @@ package reports
 import (
 	"bytes"
 	log "github.com/Sirupsen/logrus"
-	"github.com/pemcconnell/amald/loaders"
+	"github.com/pemcconnell/amald/defs"
 )
 
 type ReportHTML struct {
-	urls []loaders.SiteDefinition
+	urls []defs.SiteDefinition
 }
 
 // htmlHead creates the start of the HTML template
@@ -26,8 +26,11 @@ func htmlHead() string {
 }
 
 // htmlBody creates a series of table rows
-func htmlBody(urls []loaders.SiteDefinition) string {
+func htmlBody(data []defs.JsonData) string {
 	var buffer bytes.Buffer
+
+	// Pick most recent item (active scan)
+	urls := data[0].Data
 	for _, url := range urls {
 		buffer.WriteString("<tr>")
 		// url
@@ -57,9 +60,9 @@ func htmlFooter() string {
 
 // GenerateHTML creates an HTML string with all the required data
 // in place
-func (r *ReportHTML) Generate(urls []loaders.SiteDefinition) (string, error) {
+func (r *ReportHTML) Generate(data []defs.JsonData) (string, error) {
 	html := htmlHead()
-	html += htmlBody(urls)
+	html += htmlBody(data)
 	html += htmlFooter()
 	log.Debug("html:\n", html)
 	return html, nil
