@@ -13,3 +13,4 @@ reports:
 storage:
   json:
     path: "./tmp/data.json" # folder must exist
+    recordlimit: 100 # careful: this could truncate an existing file

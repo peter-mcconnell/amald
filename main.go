@@ -54,15 +54,15 @@ func main() {
 	exitOnError(err, "Failed to grab loaders")
 
 	// collect up some urls from the loaders
-	urls := loaders.CollectUrls()
+	urls, err := loaders.CollectUrls()
 	exitOnError(err, "Failed to exec loaders")
 
 	// storage
-	err = storage.StoreData(urls, config.Storage)
+	jsonbytes, err := storage.StoreData(urls, config.Storage)
 	exitOnError(err, "Failed to StoreData")
 
 	// call the notifiers to display/send the messages
-	err = notifiers.FireNotifiers(urls, config.Reports)
+	err = notifiers.FireNotifiers(jsonbytes, config.Reports)
 	exitOnError(err, "Failed to FireNotifiers()")
 }
 

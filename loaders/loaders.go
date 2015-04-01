@@ -42,10 +42,10 @@ func GetLoaders(activeloaders map[string]map[string]string) error {
 }
 
 // Collect URL information from each of the loaders
-func CollectUrls() []SiteDefinition {
+func CollectUrls() ([]SiteDefinition, error) {
 	m := []SiteDefinition{}
 	for _, loader := range loaders {
 		m = append(m, loader.FetchUrls()...)
 	}
-	return m
+	return m, nil
 }
