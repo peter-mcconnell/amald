@@ -52,7 +52,7 @@ func jsonStoreData(config map[string]string) ([]byte, error) {
 
 	// create a meta map to allow us to throw some extra info in
 	meta := make(map[string]string)
-	meta["utc_timestamp"] = time.Now().UTC().String()
+	meta["utc_timestamp"] = time.Now().UTC().Format("")
 
 	// marshal data
 	jstr, err := json.Marshal(struct {
