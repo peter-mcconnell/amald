@@ -16,6 +16,7 @@ func FireNotifiers(jsonbytes []byte,
 	activeloaders map[string]map[string]string) error {
 
 	data, err := loadData(jsonbytes)
+	log.Debugf("data\n%s", data)
 	if err != nil {
 		log.Fatalf("there was a problem loading the existing data: %s", err)
 	}
@@ -38,12 +39,12 @@ func FireNotifiers(jsonbytes []byte,
 func loadData(jsonbytes []byte) ([]defs.JsonData, error) {
 	var (
 		datalist []defs.JsonData
-		data     defs.JsonData
 		err      error
 	)
 
 	rows := strings.Split(string(jsonbytes), "\n")
 	for _, row := range rows {
+		var data defs.JsonData
 		if row == "" {
 			continue
 		}

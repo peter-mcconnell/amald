@@ -1,161 +1,119 @@
+// TODO: create a proper template for these. The strings are nasty
 package reports
 
 import (
 	"bytes"
 	log "github.com/Sirupsen/logrus"
 	"github.com/pemcconnell/amald/defs"
+	"html/template"
+	"math"
 	"time"
 )
 
 type ReportHTML struct{}
 
-// htmlHead creates the start of the HTML template
-func htmlHead() string {
-	html := `
-	<html>
-		<body>
-	`
-	return html
-
+type DataDiff struct {
+	AddedApps   map[string]bool
+	RemovedApps map[string]bool
+	UpdatedApps map[string]bool
 }
 
-func summary() string {
-	html := `
-	<h3>Amald summary</h3>
-	<i>Below is a list of changes to the scans that Amald has been performing &
-	stored</i>
-	<h4>since yesterday</h4>
-	<strong>new urls</strong>
-	<table width="100%" cellpadding="4">
-	<thead>
-	<tr>
-		<th align="left">URL</th>
-		<th>Locked Down</th>
-	</tr>
-	</thead>
-	<tbody>
-	<tr>
-		<td>URL</th>
-		<td>YES</th>
-	</tr>
-	</tbody>
-	</table>
-	<strong>removed urls</strong>
-	<table width="100%" cellpadding="4">
-	<thead>
-	<tr>
-		<th align="left">URL</th>
-		<th>Locked Down</th>
-	</tr>
-	</thead>
-	<tbody>
-	<tr>
-		<td>URL</th>
-		<td>YES</th>
-	</tr>
-	</tbody>
-	</table>
-	<strong>updated urls</strong>
-	<table width="100%" cellpadding="4">
-	<thead>
-	<tr>
-		<th align="left">URL</th>
-		<th>Locked Down</th>
-	</tr>
-	</thead>
-	<tbody>
-	<tr>
-		<td>URL</th>
-		<td>YES</th>
-	</tr>
-	</tbody>
-	</table>
-	`
-	return html
-}
-
-// listHead creates the start of the list template
-func listHead() string {
-	html := `
-		<h4>All apps</h4>
-		<i>Below is a list of the current state of all apps that Amald scanned 
-		on its most recent sweep</i>
-		<table width="100%" cellpadding="4">
-			<thead>
-			<tr>
-				<th align="left">URL</th>
-				<th>Locked Down</th>
-			</tr>
-			</thead>
-			<tbody>
-	`
-	return html
-}
-
-// listBody creates a series of table rows
-func listBody(data []defs.JsonData) string {
-	var buffer bytes.Buffer
-
-	// Pick most recent item (active scan)
-	urls := data[0].Data
-	for _, url := range urls {
-		buffer.WriteString("<tr>")
-		// url
-		buffer.WriteString("<td><a href=\"" + url.Url + "\">" + url.Url + "</a></td>")
-		// locked down
-		lockeddown := "Yes"
-		lockedcolor := "00CC00"
-		if !url.IsLockedDown {
-			lockeddown = "No"
-			lockedcolor = "FF0000"
-		}
-		buffer.WriteString("<td style=\"background:#" + lockedcolor + "\" align=\"center\"><strong>" + lockeddown + "</strong></td>")
-		buffer.WriteString("</tr>")
-	}
-	return buffer.String()
-}
-
-// listFooter simply closes off the list template
-func listFooter() string {
-	html := `
-			</tbody>
-		</table>`
-	return html
-}
-
-func htmlFooter() string {
-	html := `
-			</body>
-		</html>`
-	return html
-}
-
-// DiffData is designed to scan all of the available data to try and pull out
+// findDiffs is designed to scan all of the available data to try and pull out
 // some comparitive differences in the data sets.
 // data is in order (newest first) which gives us some advantages for marking
-// out which data to use for
-func diffData(data []defs.JsonData) (map[string][]defs.JsonData, error) {
+// out which data to use for - the capture points will keep getting overwritten
+// with the earliest available entry for that day
+func findDiffs(data []defs.JsonData) (map[string]DataDiff, error) {
 	var err error
-	var summary = make(map[string][]defs.JsonData)
+	diffdata := make(map[string]defs.JsonData)
+	diffreturn := make(map[string]DataDiff)
 	for _, d := range data {
-		log.Info(time.Parse("2010-12-20 21:16:26.371Z", d.Meta["utc_timestamp"]))
+		if then, err := time.Parse(time.RFC3339, d.Meta["timestamp"]); err == nil {
+			distance := math.Ceil(time.Since(then).Hours()/24) - 1
+			log.Debug(distance)
+			// no need to inspect past 30 days
+			if distance > 30 {
+				break
+			}
+			switch distance {
+			case 1:
+				diffdata["yesterday"] = d
+			case 7:
+				diffdata["lastweek"] = d
+			case 30:
+				diffdata["thirtydays"] = d
+			}
+		}
 	}
-	return summary, err
+	// now we (might) have the relevant data selected, run comparisons against
+	// the latest scan [0]
+	if _, ok := diffdata["yesterday"]; ok {
+		diffreturn["yesterday"] = compareData(diffdata["yesterday"], data[0])
+	}
+	if _, ok := diffdata["lastweek"]; ok {
+		diffreturn["lastweek"] = compareData(diffdata["lastweek"], data[0])
+	}
+	if _, ok := diffdata["thirtydays"]; ok {
+		diffreturn["thirtydays"] = compareData(diffdata["thirtydays"], data[0])
+	}
+	return diffreturn, err
+}
+
+// compareData is designed to inspect and compare two different maps. It
+// returns a DataDiff struct detailing the differences that it finds
+func compareData(oldscan defs.JsonData, newscan defs.JsonData) DataDiff {
+	diffreturn := DataDiff{
+		AddedApps:   make(map[string]bool),
+		RemovedApps: make(map[string]bool),
+		UpdatedApps: make(map[string]bool)}
+	// loop through the old data to assess what's changed
+	for _, def := range oldscan.Data {
+		// does this url appear in both datasets?
+		if _, newdata := newscan.Data[def.Url]; newdata {
+			// was the lockdown status different?
+			if newscan.Data[def.Url].IsLockedDown != def.IsLockedDown {
+				log.Debug("url: %s, has changed lockdown status to %s",
+					def.Url, newscan.Data[def.Url].IsLockedDown)
+				diffreturn.UpdatedApps[def.Url] = newscan.Data[def.Url].IsLockedDown
+				// remove item from newscan Data so at the end we can assess
+				// what's left (will leave new urls).
+				delete(newscan.Data, def.Url)
+			}
+		} else {
+			// url is not in the newscan (removed)
+			diffreturn.RemovedApps[def.Url] = newscan.Data[def.Url].IsLockedDown
+			// remove item from newscan Data so at the end we can assess what's
+			// left (will leave new urls).
+			delete(newscan.Data, def.Url)
+		}
+	}
+	// now that we have checked all of the old data, we can see what's left
+	// from the new scan, which we will determine as new urls
+	for _, data := range newscan.Data {
+		diffreturn.AddedApps[data.Url] = data.IsLockedDown
+	}
+	return diffreturn
 }
 
 // GenerateHTML creates an HTML string with all the required data
 // in place
 func (r *ReportHTML) Generate(data []defs.JsonData) (string, error) {
-	_, err := diffData(data)
+	diff, err := findDiffs(data)
 	if err != nil {
 		log.Errorf("failed to diffData: %s", err)
 	}
-	html := htmlHead()
-	html += summary()
-	html += listHead()
-	html += listBody(data)
-	html += listFooter()
-	html += htmlFooter()
-	log.Debug("html:\n", html)
-	return html, nil
+	type TemplateData struct {
+		Summary map[string]DataDiff
+		List    defs.JsonData
+	}
+	tmpldata := TemplateData{}
+	tmpldata.Summary = diff
+	tmpldata.List = data[0]
+	var doc bytes.Buffer
+	tmpl := template.Must(template.ParseGlob("reports/tmpl/email/*"))
+	err = tmpl.ExecuteTemplate(&doc, "email", tmpldata)
+	if err != nil {
+		log.Fatalf("Error running ParseFiles: %s", err)
+	}
+	return doc.String(), nil
 }

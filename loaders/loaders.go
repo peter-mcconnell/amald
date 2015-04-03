@@ -6,7 +6,7 @@ import (
 )
 
 type UrlsLoader interface {
-	FetchUrls() []defs.SiteDefinition
+	FetchUrls() map[string]defs.SiteDefinition
 }
 
 var (
@@ -38,10 +38,13 @@ func GetLoaders(activeloaders map[string]map[string]string) error {
 }
 
 // Collect URL information from each of the loaders
-func CollectUrls() ([]defs.SiteDefinition, error) {
-	m := []defs.SiteDefinition{}
+func CollectUrls() (map[string]defs.SiteDefinition, error) {
+	m := map[string]defs.SiteDefinition{}
 	for _, loader := range loaders {
-		m = append(m, loader.FetchUrls()...)
+		f := loader.FetchUrls()
+		for k, v := range f {
+			m[k] = v
+		}
 	}
 	return m, nil
 }

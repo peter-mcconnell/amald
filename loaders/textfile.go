@@ -30,8 +30,8 @@ func textfileLoaderAvailable(settings map[string]string) bool {
 
 // ScanUrls calls some Gcloud CLI commands, parses the output & then checks
 // the url using authtest
-func (l *LoaderTextfile) FetchUrls() []defs.SiteDefinition {
-	m := []defs.SiteDefinition{}
+func (l *LoaderTextfile) FetchUrls() map[string]defs.SiteDefinition {
+	m := map[string]defs.SiteDefinition{}
 	file, err := os.Open(textfile_path)
 	if err != nil {
 		log.Fatal(err)
@@ -45,7 +45,7 @@ func (l *LoaderTextfile) FetchUrls() []defs.SiteDefinition {
 		if err != nil {
 			log.WithFields(log.Fields{"url": url}).Fatal(err)
 		}
-		m = append(m, defs.SiteDefinition{Url: url, IsLockedDown: lockeddown})
+		m[url] = defs.SiteDefinition{Url: url, IsLockedDown: lockeddown}
 	}
 
 	if err := scanner.Err(); err != nil {
