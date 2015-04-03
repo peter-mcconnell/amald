@@ -343,7 +343,7 @@
                               <td style="background-color:#ffffff">
                                     <a href="{{ $def.Url }}" style="font-size:13px; color:#757ad8">{{ $def.Url }}</a>
                               </td>
-                              <td style="background:#ff6633;">
+                              <td style="{{ if $def.IsLockedDown }}background:#90ea99{{ else }}background:#ff6633;{{ end }}">
                                     <div style="text-align:center; font-size:13px; padding:4px;">{{ $def.IsLockedDown }}</div>
                               </td>
                         </tr>
