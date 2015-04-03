@@ -12,7 +12,8 @@ func TestUrlIsLockedDown(url string) (bool, error) {
 	lockeddown := false
 	resp, err := http.Get(url)
 	if err != nil {
-		log.WithFields(log.Fields{"err": err}).Fatal("Failed to get URL")
+		log.Warnf("Failed to get URL [%s]:\n%s", resp.Status, err)
+		return lockeddown, err
 	}
 
 	// HTTP 401, or User Service login
