@@ -45,11 +45,11 @@ moment
 You can run this tool however you like. Something like a cronjob would be 
 useful. Here is an example of the ASCII output:
 
-![manually ran in terminal](https://cloud.githubusercontent.com/assets/641429/6888122/aace0360-d66b-11e4-8a81-89049ea358b8.png)
+![manually ran in terminal](https://cloud.githubusercontent.com/assets/641429/6988095/be0a5bda-da45-11e4-99ff-dd90b5459d44.png)
 
 You can enable email reports using the mailgun feature, via `config.yaml`:
 
-![email output](https://cloud.githubusercontent.com/assets/641429/6888121/aab6f7d8-d66b-11e4-8a5d-17389d55ac8d.png)
+![email output](https://cloud.githubusercontent.com/assets/641429/6988094/be04cb84-da45-11e4-86c8-582440802a02.png)
 
 PR's welcome :)
 
