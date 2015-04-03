@@ -32,7 +32,6 @@ func execGcloudComponentRequirements() (string, error) {
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	err := cmd.Run()
-	log.Info(err)
 	return out.String(), err
 }
 
@@ -58,7 +57,8 @@ func execGcloudModules(project string) string {
 	cmd.Stdout = &out
 	err := cmd.Run()
 	if err != nil {
-		log.Fatalf("failed to exec gcloud modules cmd: %s", err)
+		log.Warnf("failed to exec gcloud modules for %s:\n%s", project, err)
+		return ""
 	}
 	return out.String()
 }
@@ -85,6 +85,10 @@ func (l *LoaderGcloudCLI) FetchUrls() map[string]defs.SiteDefinition {
 	m := map[string]defs.SiteDefinition{}
 	for _, project := range projects {
 		modules := execGcloudModules(project)
+		if modules == "" {
+			log.Debugf("skipping FetchUrl loop for %s", project)
+			continue
+		}
 		versionsraw := strings.Split(parseModulesOutput(modules), "\n")
 		l := len(versionsraw)
 		if l > 1 {
