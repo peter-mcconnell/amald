@@ -66,31 +66,33 @@ func compareData(oldscan defs.JsonData, newscan defs.JsonData) DataDiff {
 		AddedApps:   make(map[string]bool),
 		RemovedApps: make(map[string]bool),
 		UpdatedApps: make(map[string]bool)}
+	matchedurls := make(map[string]bool)
 	// loop through the old data to assess what's changed
 	for _, def := range oldscan.Data {
 		// does this url appear in both datasets?
 		if _, newdata := newscan.Data[def.Url]; newdata {
 			// was the lockdown status different?
 			if newscan.Data[def.Url].IsLockedDown != def.IsLockedDown {
-				log.Debug("url: %s, has changed lockdown status to %s",
+				log.Debug("url: %s has changed lockdown status to %s",
 					def.Url, newscan.Data[def.Url].IsLockedDown)
 				diffreturn.UpdatedApps[def.Url] = newscan.Data[def.Url].IsLockedDown
-				// remove item from newscan Data so at the end we can assess
-				// what's left (will leave new urls).
-				delete(newscan.Data, def.Url)
 			}
+			// track matched urls so at the end we can assess what's left
+			// (will leave new urls).
+			matchedurls[def.Url] = true
 		} else {
 			// url is not in the newscan (removed)
 			diffreturn.RemovedApps[def.Url] = newscan.Data[def.Url].IsLockedDown
-			// remove item from newscan Data so at the end we can assess what's
-			// left (will leave new urls).
-			delete(newscan.Data, def.Url)
+			log.Debugf("url: %s appears to have been removed", def.Url)
 		}
 	}
 	// now that we have checked all of the old data, we can see what's left
 	// from the new scan, which we will determine as new urls
 	for _, data := range newscan.Data {
-		diffreturn.AddedApps[data.Url] = data.IsLockedDown
+		if _, ok := matchedurls[data.Url]; !ok {
+			diffreturn.AddedApps[data.Url] = data.IsLockedDown
+			log.Debugf("url: %s appears to be new", data.Url)
+		}
 	}
 	return diffreturn
 }
