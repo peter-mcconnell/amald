@@ -77,12 +77,12 @@ func parseModulesOutput(data string) string {
 
 // ScanUrls calls some Gcloud CLI commands, parses the output & then checks
 // the url using authtest
-func (l *LoaderGcloudCLI) FetchUrls() []defs.SiteDefinition {
+func (l *LoaderGcloudCLI) FetchUrls() map[string]defs.SiteDefinition {
 	projectstring := execGcloudProjects()
 	data := parseProjectsOutput(projectstring)
 	projectsraw := strings.Split(data, "\n")
 	projects := projectsraw[1 : len(projectsraw)-1]
-	m := []defs.SiteDefinition{}
+	m := map[string]defs.SiteDefinition{}
 	for _, project := range projects {
 		modules := execGcloudModules(project)
 		versionsraw := strings.Split(parseModulesOutput(modules), "\n")
@@ -100,7 +100,7 @@ func (l *LoaderGcloudCLI) FetchUrls() []defs.SiteDefinition {
 					if err != nil {
 						log.WithFields(log.Fields{"url": url}).Fatal(err)
 					}
-					m = append(m, defs.SiteDefinition{Url: url, IsLockedDown: lockeddown})
+					m[url] = defs.SiteDefinition{Url: url, IsLockedDown: lockeddown}
 					versionscache[version] = true
 				}
 			}

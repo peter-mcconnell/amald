@@ -12,6 +12,6 @@ type SiteDefinition struct {
 }
 
 type JsonData struct {
-	Meta map[string]string `json:"Meta"`
-	Data []SiteDefinition  `json:"Data"`
+	Meta map[string]string         `json:"Meta"`
+	Data map[string]SiteDefinition `json:"Data"`
 }

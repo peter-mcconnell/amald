@@ -12,13 +12,13 @@ import (
 )
 
 var (
-	urls        []defs.SiteDefinition
+	urls        map[string]defs.SiteDefinition
 	recordLimit int = 100 // default value (if not set in config)
 )
 
 // StoreData adds a new entry of urls to the specified json file. It returns
 // a byte array of ALL records and an error type
-func StoreData(passedurls []defs.SiteDefinition,
+func StoreData(passedurls map[string]defs.SiteDefinition,
 	config map[string]map[string]string) ([]byte, error) {
 	urls = passedurls
 	var (
@@ -52,12 +52,12 @@ func jsonStoreData(config map[string]string) ([]byte, error) {
 
 	// create a meta map to allow us to throw some extra info in
 	meta := make(map[string]string)
-	meta["utc_timestamp"] = time.Now().UTC().String()
+	meta["timestamp"] = time.Now().UTC().Format(time.RFC3339)
 
 	// marshal data
 	jstr, err := json.Marshal(struct {
 		Meta map[string]string
-		Data []defs.SiteDefinition
+		Data map[string]defs.SiteDefinition
 	}{
 		Meta: meta,
 		Data: urls,
