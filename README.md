@@ -10,7 +10,8 @@ can load these urls using a combination of the following:
 
 - download the latest stable binary for your OS from 
 https://github.com/pemcconnell/amald/releases/ 
-
+- The binary is all that's required, but if you wish to avail of the mailgun (email) notifications you'll need to include `reports/tmpl/` so that amald can find the html templates & you'll also need to ensure the `config.yaml` is set up and correctly configured.
+- If you wish to utilise storage (for report summaries) you'll need to ensure that a folder `./tmp` exists and is writable (amald will create `data.json` file)
 
 ## Config
 
@@ -38,7 +39,7 @@ Type `./amald -h` to list the supported flags
 wide open to breaks as CLI updates wont be reflected in this tool automatically
 - The lockdown only checks for 401 or if there are X-Auto-Login headers at the 
 moment
-- This is super alpha
+- This is beta 
 
 #### Screenies
 
