@@ -54,8 +54,7 @@ func main() {
 	exitOnError(err, "Failed to grab loaders")
 
 	// collect up some urls from the loaders
-	urls, err := loaders.CollectUrls()
-	exitOnError(err, "Failed to exec loaders")
+	urls := loaders.CollectUrls()
 
 	// storage
 	jsonbytes, err := storage.StoreData(urls, config.Storage)
