@@ -13,7 +13,7 @@ type NotifierLoader interface {
 }
 
 func FireNotifiers(jsonbytes []byte,
-	activeloaders map[string]map[string]string) error {
+	activeloaders map[string]map[string]string) {
 
 	data, err := loadData(jsonbytes)
 	log.Debugf("data\n%s", data)
@@ -32,8 +32,6 @@ func FireNotifiers(jsonbytes []byte,
 		n := &NotifierMailgun{data: data}
 		n.Send(activeloaders["mailgun"])
 	}
-
-	return nil
 }
 
 func loadData(jsonbytes []byte) ([]defs.JsonData, error) {
