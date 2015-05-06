@@ -52,8 +52,7 @@ func main() {
 	exitOnError(err, "Failed to StoreData")
 
 	// call the notifiers to display/send the messages
-	err = notifiers.FireNotifiers(jsonbytes, config.Reports)
-	exitOnError(err, "Failed to FireNotifiers()")
+	notifiers.FireNotifiers(jsonbytes, config.Reports)
 }
 
 // exitOnError checks that and error is not nil. If the passed value is an
