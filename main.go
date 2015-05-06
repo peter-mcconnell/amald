@@ -19,7 +19,7 @@ var (
 			"./config.yaml")
 	loglevel = flag.String("v", "info",
 		"[loglevel] set the verbosity of the log levels. Can be: debug, "+
-			"info, warn, panic, fatal")
+			"info, warn, error, panic, fatal")
 )
 
 func init() {
@@ -27,17 +27,8 @@ func init() {
 	flag.Parse()
 
 	// Set logrus level
-	switch *loglevel {
-	case "debug":
-		log.SetLevel(log.DebugLevel)
-	case "info":
-		log.SetLevel(log.InfoLevel)
-	case "warn":
-		log.SetLevel(log.WarnLevel)
-	case "panic":
-		log.SetLevel(log.PanicLevel)
-	case "fatal":
-		log.SetLevel(log.FatalLevel)
+	if level, err := log.ParseLevel(*loglevel); err == nil {
+		log.SetLevel(level)
 	}
 }
 
