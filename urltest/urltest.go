@@ -11,8 +11,9 @@ func TestUrlIsLockedDown(url string) (bool, error) {
 
 	lockeddown := false
 	resp, err := http.Get(url)
+
 	if err != nil {
-		log.Warnf("Failed to get URL [%s]:\n%s", resp.Status, err)
+		log.Warnf("Failed to get URL:\n%s", err)
 		return lockeddown, err
 	}
 
