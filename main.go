@@ -17,6 +17,8 @@ var (
 	configpath = flag.String("c", "./config.yaml",
 		"[config] set the path for the yaml config file. This defautls to "+
 			"./config.yaml")
+	templatepath = flag.String("t", "reports/tmpl/",
+		"[templates directory] set the path for the templates directory")
 	loglevel = flag.String("v", "info",
 		"[loglevel] set the verbosity of the log levels. Can be: debug, "+
 			"info, warn, error, panic, fatal")
@@ -52,7 +54,7 @@ func main() {
 	exitOnError(err, "Failed to StoreData")
 
 	// call the notifiers to display/send the messages
-	notifiers.FireNotifiers(jsonbytes, config.Reports)
+	notifiers.FireNotifiers(*templatepath, jsonbytes, config.Reports)
 }
 
 // exitOnError checks that and error is not nil. If the passed value is an

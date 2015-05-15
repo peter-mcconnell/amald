@@ -12,7 +12,7 @@ type NotifierLoader interface {
 	Send(map[string]map[string]string, string)
 }
 
-func FireNotifiers(jsonbytes []byte,
+func FireNotifiers(templatepath string, jsonbytes []byte,
 	activeloaders map[string]map[string]string) {
 
 	data, err := loadData(jsonbytes)
@@ -29,7 +29,7 @@ func FireNotifiers(jsonbytes []byte,
 
 	// check to see if mailgun has been specified in the config
 	if _, ok := activeloaders["mailgun"]; ok {
-		n := &NotifierMailgun{data: data}
+		n := &NotifierMailgun{data: data, templatepath: templatepath}
 		n.Send(activeloaders["mailgun"])
 	}
 }

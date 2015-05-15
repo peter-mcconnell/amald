@@ -8,7 +8,9 @@ import (
 	"html/template"
 )
 
-type ReportHTML struct{}
+type ReportHTML struct {
+	Templatepath string
+}
 
 // GenerateHTML creates an HTML string with all the required data
 // in place
@@ -25,7 +27,7 @@ func (r *ReportHTML) Generate(data []defs.JsonData) (string, error) {
 	tmpldata.Summary = diff
 	tmpldata.List = data[0]
 	var doc bytes.Buffer
-	tmpl := template.Must(template.ParseGlob("reports/tmpl/email/*"))
+	tmpl := template.Must(template.ParseGlob(r.Templatepath + "email/*"))
 	err = tmpl.ExecuteTemplate(&doc, "email", tmpldata)
 	if err != nil {
 		log.Fatalf("Error running ParseFiles: %s", err)

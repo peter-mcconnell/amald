@@ -10,12 +10,15 @@ import (
 )
 
 type NotifierMailgun struct {
-	data []defs.JsonData
+	data         []defs.JsonData
+	templatepath string
 }
 
 // Send the message via mailgun
 func (n *NotifierMailgun) Send(config map[string]string) {
-	r := reports.ReportHTML{}
+	r := reports.ReportHTML{
+		Templatepath: n.templatepath,
+	}
 	if message, err := r.Generate(n.data); err == nil {
 		client := &http.Client{}
 		data := url.Values{}
