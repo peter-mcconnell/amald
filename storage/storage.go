@@ -12,15 +12,30 @@ import (
 )
 
 var (
-	urls        map[string]defs.SiteDefinition
-	recordLimit int = 100 // default value (if not set in config)
+	urls              map[string]defs.SiteDefinition
+	recordLimit       int = 100 // default value (if not set in config)
+	ExistingDataBytes []byte
 )
+
+// LoadData looks up the current storage and loads data from it. The output is stored
+// in a []byte
+func LoadData(config map[string]map[string]string) ([]byte, error) {
+	data, err := loadExistingTextfileData(config["json"])
+	if err != nil {
+		// Only a warning as this will fail if a json file hasn't been stored
+		// previously
+		log.Warnf("Failed to load data file: %s", err)
+	}
+	// globally assign the data, allowing other methods in this package to use it
+	ExistingDataBytes = data
+	return data, err
+}
 
 // StoreData adds a new entry of urls to the specified json file. It returns
 // a byte array of ALL records and an error type
-func StoreData(passedurls map[string]defs.SiteDefinition,
+func StoreData(reportonly bool, passedurls map[string]defs.SiteDefinition,
 	config map[string]map[string]string) ([]byte, error) {
-	urls = passedurls
+
 	var (
 		data []byte
 		err  error
@@ -43,7 +58,7 @@ func StoreData(passedurls map[string]defs.SiteDefinition,
 		}
 	}
 
-	return data, nil
+	return data, err
 }
 
 // jsonStoreData takes any existing information in the json file and adds in
@@ -67,14 +82,7 @@ func jsonStoreData(config map[string]string) ([]byte, error) {
 	}
 	jstr = append(jstr, []byte("\n")...) // NL gives each entry its own row
 
-	// load existing data
-	datab, err := loadExistingTextfileData(config)
-	if err != nil {
-		// Only a warning as this will fail if a json file hasn't been stored
-		// previously
-		log.Warnf("Failed to load data file: %s", err)
-	}
-	data := append(jstr, datab...)
+	data := append(jstr, ExistingDataBytes...)
 
 	// write to disk
 	err = ioutil.WriteFile(config["path"], data, 0644)

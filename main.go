@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	VERSION string = "0.0.2"
+	VERSION string = "0.0.3"
 )
 
 var (
@@ -22,6 +22,7 @@ var (
 	loglevel = flag.String("v", "info",
 		"[loglevel] set the verbosity of the log levels. Can be: debug, "+
 			"info, warn, error, panic, fatal")
+	reportonly = flag.Bool("r", false, "[report only] if true amald will not run a scan but will instead only display a report")
 )
 
 func init() {
@@ -40,29 +41,31 @@ func main() {
 
 	// load the config
 	config, err := config.LoadConfig(*configpath)
-	exitOnError(err, "There was a problem setting the config")
+	if err != nil {
+		log.Fatalf("There was a problem setting the config")
+	}
 
 	// grab the loaders
 	err = loaders.GetLoaders(config.ActiveLoaders)
-	exitOnError(err, "Failed to grab loaders")
+	if err != nil {
+		log.Fatalf("Failed to grab loaders")
+	}
 
-	// collect up some urls from the loaders
-	urls := loaders.CollectUrls()
+	// Load Data
+	if _, err := storage.LoadData(config.Storage); err != nil {
+		log.Warnf("Failed to LoadData")
+	}
 
-	// storage
-	jsonbytes, err := storage.StoreData(urls, config.Storage)
-	exitOnError(err, "Failed to StoreData")
+	// Store Data
+	if !*reportonly {
+		urls := loaders.CollectUrls()
+		if _, err := storage.StoreData(*reportonly, urls, config.Storage); err != nil {
+			log.Fatalf("Failed to StoreData")
+		}
+	}
 
 	// call the notifiers to display/send the messages
-	notifiers.FireNotifiers(*templatepath, jsonbytes, config.Reports)
-}
-
-// exitOnError checks that and error is not nil. If the passed value is an
-// error, it is logged and the program exits with an error code of 1
-func exitOnError(err error, prefix string) {
-	if err != nil {
-		log.WithFields(log.Fields{"err": err}).Fatal(prefix)
-	}
+	notifiers.FireNotifiers(*templatepath, storage.ExistingDataBytes, config.Reports)
 }
 
 // welcome displays the version number to the user
