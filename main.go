@@ -22,7 +22,8 @@ var (
 	loglevel = flag.String("v", "info",
 		"[loglevel] set the verbosity of the log levels. Can be: debug, "+
 			"info, warn, error, panic, fatal")
-	reportonly = flag.Bool("r", false, "[report only] if true amald will not run a scan but will instead only display a report")
+	reportonly = flag.Bool("r", false, "[report only] if true amald will "+
+		"not run a scan but will instead only display a report")
 )
 
 func init() {
