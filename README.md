@@ -20,7 +20,7 @@ been provided at `example.config.yaml`. Note that if you wish to enable some of
 the features you may need to configure some things first:
 
 - `gcloud` features require the CLI to be installed & already auth'ed. It will
-attempt to update `preview` and `app` components as they are required to run
+attempt to update `alpha` and `app` components as they are required to run
 the commands that Amald uses.
 - If you wish to enable Mailgun notifications an api key & api url is required.
 
