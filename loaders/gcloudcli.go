@@ -28,7 +28,7 @@ func gcloudcliLoaderAvailable() bool {
 func execGcloudComponentRequirements() (string, error) {
 
 	log.Info("Attempting to install / update the gcloud app component")
-	cmd := exec.Command("gcloud", "components", "update", "app")
+	cmd := exec.Command("gcloud", "components", "update", "app", "alpha")
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	err := cmd.Run()
@@ -38,7 +38,7 @@ func execGcloudComponentRequirements() (string, error) {
 // execGcloudProjects Calls `gcloud preview projects list` and returns the
 // output
 func execGcloudProjects() string {
-	cmd := exec.Command("gcloud", "preview", "projects", "list")
+	cmd := exec.Command("gcloud", "alpha", "projects", "list")
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	err := cmd.Run()
