@@ -15,8 +15,8 @@ https://github.com/pemcconnell/amald/releases/
 
 ## Config
 
-The config file will load by default at `config.yaml`. An example config has 
-been provided at `example.config.yaml`. Note that if you wish to enable some of
+The config file will load by default at `./config.yaml`. An example config has 
+been provided at `./config/example.config.yaml`. Note that if you wish to enable some of
 the features you may need to configure some things first:
 
 - `gcloud` features require the CLI to be installed & already auth'ed. It will

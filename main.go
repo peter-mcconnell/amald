@@ -3,19 +3,19 @@ package main
 import (
 	"flag"
 	log "github.com/Sirupsen/logrus"
-	config "github.com/pemcconnell/amald/config"
+	"github.com/pemcconnell/amald/config"
 	"github.com/pemcconnell/amald/loaders"
-	"github.com/pemcconnell/amald/notifiers"
-	"github.com/pemcconnell/amald/storage"
+	//	"github.com/pemcconnell/amald/notifiers"
+	//	"github.com/pemcconnell/amald/storage"
 )
 
 const (
-	VERSION string = "0.0.3"
+	VERSION string = "0.1.0"
 )
 
 var (
 	configpath = flag.String("c", "./config.yaml",
-		"[config] set the path for the yaml config file. This defautls to "+
+		"[config] set the path for the yaml config file. This defaults to "+
 			"./config.yaml")
 	templatepath = flag.String("t", "reports/tmpl/",
 		"[templates directory] set the path for the templates directory")
@@ -38,41 +38,23 @@ func init() {
 
 func main() {
 
-	welcome()
-
 	// load the config
-	config, err := config.LoadConfig(*configpath)
+	cfg, err := config.Load(*configpath)
 	if err != nil {
-		log.Fatalf("There was a problem setting the config")
+		log.Fatalf("Failed to load the config from %s", *configpath)
 	}
 
-	// grab the loaders
-	err = loaders.GetLoaders(config.ActiveLoaders)
-	if err != nil {
-		log.Fatalf("Failed to grab loaders")
-	}
+	// collect list of URLs from all possible loaders
+	loaders.GetLoaders(cfg.Loaders)
+	loaders.CollectUrls()
 
-	// load data
-	if _, err := storage.LoadData(config.Storage); err != nil {
-		log.Warnf("Failed to LoadData")
-	}
+	// test all of the urls
 
-	// store data
-	if !*reportonly {
-		urls := loaders.CollectUrls()
-		log.Debug("URLS:\n", urls)
-		if _, err := storage.StoreData(*reportonly, urls, config.Storage); err != nil {
-			log.Fatalf("Failed to StoreData")
-		}
-	}
+	// interact with storage
+	//// store latest scan results
 
-	// call the notifiers to display/send the messages
-	notifiers.FireNotifiers(*templatepath, storage.ExistingDataBytes, config.Reports)
-}
+	//// compare latest scan with previously stored results
 
-// welcome displays the version number to the user
-func welcome() {
-	log.Info("\n---------------------------------\n"+
-		" ~ amald v"+VERSION, " ~\n"+
-		"---------------------------------")
+	// fire off each notifier
+
 }

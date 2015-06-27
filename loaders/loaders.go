@@ -2,20 +2,18 @@ package loaders
 
 import (
 	log "github.com/Sirupsen/logrus"
-	"github.com/pemcconnell/amald/defs"
 )
 
 type UrlsLoader interface {
-	FetchUrls() map[string]defs.SiteDefinition
+	FetchUrls() []string
 }
 
 var (
 	loaders = make(map[string]UrlsLoader)
 )
 
-// Grab each loader
-func GetLoaders(activeloaders map[string]map[string]string) error {
-
+func GetLoaders(activeloaders map[string]map[string]string) {
+	log.Debug("get loaders")
 	// check to see if gcloudcli has been specified in the config
 	if _, ok := activeloaders["gcloudcli"]; ok {
 		// gcloudcli has been specified. See if we can run it
@@ -33,18 +31,18 @@ func GetLoaders(activeloaders map[string]map[string]string) error {
 			loaders["textfile"] = &LoaderTextfile{}
 		}
 	}
-
-	return nil
 }
 
 // Collect URL information from each of the loaders
-func CollectUrls() map[string]defs.SiteDefinition {
-	m := map[string]defs.SiteDefinition{}
+func CollectUrls() []string {
+	log.Debug("collect urls")
+	m := []string{}
 	for _, loader := range loaders {
 		f := loader.FetchUrls()
-		for k, v := range f {
-			m[k] = v
+		for _, v := range f {
+			m = append(m, v)
 		}
 	}
+	log.Debug("found these urls:\n", m)
 	return m
 }

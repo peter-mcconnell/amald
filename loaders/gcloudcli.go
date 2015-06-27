@@ -3,8 +3,6 @@ package loaders
 import (
 	"bytes"
 	log "github.com/Sirupsen/logrus"
-	"github.com/pemcconnell/amald/defs"
-	"github.com/pemcconnell/amald/urltest"
 	"os/exec"
 	"regexp"
 	"strings"
@@ -37,15 +35,12 @@ func execGcloudComponentRequirements() (string, error) {
 
 // execGcloudProjects Calls `gcloud preview projects list` and returns the
 // output
-func execGcloudProjects() string {
+func execGcloudProjects() (string, error) {
 	cmd := exec.Command("gcloud", "alpha", "projects", "list")
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	err := cmd.Run()
-	if err != nil {
-		log.Fatalf("failed to exec gcloud alpha projects list: %s", err)
-	}
-	return out.String()
+	return out.String(), err
 }
 
 // Calls `gcloud preview app modules list` with a specified project and
@@ -77,12 +72,15 @@ func parseModulesOutput(data string) string {
 
 // ScanUrls calls some Gcloud CLI commands, parses the output & then checks
 // the url using authtest
-func (l *LoaderGcloudCLI) FetchUrls() map[string]defs.SiteDefinition {
-	projectstring := execGcloudProjects()
+func (l *LoaderGcloudCLI) FetchUrls() []string {
+	projectstring, err := execGcloudProjects()
+	if err != nil {
+		log.Fatalf("gcloud projects command failed: %s", err)
+	}
 	data := parseProjectsOutput(projectstring)
 	projectsraw := strings.Split(data, "\n")
 	projects := projectsraw[1 : len(projectsraw)-1]
-	m := map[string]defs.SiteDefinition{}
+	m := []string{}
 	for _, project := range projects {
 		modules := execGcloudModules(project)
 		if modules == "" {
@@ -92,19 +90,13 @@ func (l *LoaderGcloudCLI) FetchUrls() map[string]defs.SiteDefinition {
 		versionsraw := strings.Split(parseModulesOutput(modules), "\n")
 		l := len(versionsraw)
 		if l > 1 {
-			log.Printf("%s ~ scanning", project)
 			versions := versionsraw[1 : len(versionsraw)-1]
 			// versionscache ensures that we're only testing once per version
 			// (gcloud modules can return multiple results per version)
 			versionscache := make(map[string]bool)
 			for _, version := range versions {
 				if !versionscache[version] {
-					url := "https://" + version + "-dot-" + project + ".appspot.com"
-					lockeddown, err := urltest.TestUrlIsLockedDown(url)
-					if err != nil {
-						log.WithFields(log.Fields{"url": url}).Fatal(err)
-					}
-					m[url] = defs.SiteDefinition{Url: url, IsLockedDown: lockeddown}
+					m = append(m, "https://"+version+"-dot-"+project+".appspot.com")
 					versionscache[version] = true
 				}
 			}

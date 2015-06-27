@@ -12,18 +12,17 @@ import (
 // LoadConfig returns a Config struct. It builds the config using the provided
 // filepath. loadDefaults called after the yaml file is scanned to assign
 // defaults if they are needed.
-func LoadConfig(path string) (defs.Config, error) {
-
+func Load(path string) (defs.Config, error) {
+	log.Debug("load config")
 	var (
 		config defs.Config
 	)
 
 	// does file exist?
 	path, _ = filepath.Abs(path)
-	log.Debugf("LoadConfig %s", path)
 	_, err := os.Stat(path)
 	if err != nil {
-		log.Warnf("config file not found: %s", path)
+		log.Fatalf("config file not found: %s", path)
 	} else {
 		// read file
 		yamlFile, err := ioutil.ReadFile(path)
