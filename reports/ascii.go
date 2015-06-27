@@ -64,59 +64,61 @@ func createSummaryForType(data DataDiff, keyprefix string) map[string]string {
 // in place
 func (r *ReportAscii) Generate(data []defs.JsonData) (string, error) {
 
-	diff, err := FindDiffs(data)
-	if err != nil {
-		log.Errorf("failed to diffData: %s", err)
-	}
-	type TemplateData struct {
-		Summary map[string]DataDiff
-		List    defs.JsonData
-	}
-	tmpldata := TemplateData{}
-	tmpldata.Summary = diff
-	tmpldata.List = data[0]
-
 	// start to create the ascii output
 	var output string
 
-	// summary
-	summaries := make(map[string]map[string]string)
+	if len(data) != 0 {
+		diff, err := FindDiffs(data)
+		if err != nil {
+			log.Errorf("failed to diffData: %s", err)
+		}
+		type TemplateData struct {
+			Summary map[string]DataDiff
+			List    defs.JsonData
+		}
+		tmpldata := TemplateData{}
+		tmpldata.Summary = diff
+		tmpldata.List = data[0]
 
-	summaries["yesterday"] = createSummaryForType(tmpldata.Summary["yesterday"], "yesterday")
-	summaries["lastweek"] = createSummaryForType(tmpldata.Summary["lastweek"], "lastweek")
-	summaries["thirtydays"] = createSummaryForType(tmpldata.Summary["thirtydays"], "thirtydays")
+		// summary
+		summaries := make(map[string]map[string]string)
 
-	summaryout := ""
-	for _, dat := range summaries {
-		if len(dat) != 0 {
-			for k, out := range dat {
-				summaryout += "\n ~ " + k + "\n"
-				summaryout += out
+		summaries["yesterday"] = createSummaryForType(tmpldata.Summary["yesterday"], "yesterday")
+		summaries["lastweek"] = createSummaryForType(tmpldata.Summary["lastweek"], "lastweek")
+		summaries["thirtydays"] = createSummaryForType(tmpldata.Summary["thirtydays"], "thirtydays")
+
+		summaryout := ""
+		for _, dat := range summaries {
+			if len(dat) != 0 {
+				for k, out := range dat {
+					summaryout += "\n ~ " + k + "\n"
+					summaryout += out
+				}
 			}
 		}
-	}
-	if summaryout != "" {
-		output += "\n[ SUMMARIES ]\n" + summaryout
-	}
-
-	// latest scan
-	output += "\n[ LATEST SCAN ]\n"
-
-	buffer.Reset()
-	table := tablewriter.NewWriter(&buffer)
-	table.SetHeader([]string{"URL", "LockedDown"})
-
-	// Pick most recent item (active scan)
-	for _, url := range tmpldata.List.Data {
-		//m := make()
-		lockeddown := "Yes"
-		if !url.IsLockedDown {
-			lockeddown = "No"
+		if summaryout != "" {
+			output += "\n[ SUMMARIES ]\n" + summaryout
 		}
-		table.Append([]string{url.Url, lockeddown})
-	}
-	table.Render()
 
-	output += buffer.String()
+		// latest scan
+		output += "\n[ LATEST SCAN ]\n"
+
+		buffer.Reset()
+		table := tablewriter.NewWriter(&buffer)
+		table.SetHeader([]string{"URL", "LockedDown"})
+
+		// Pick most recent item (active scan)
+		for _, url := range tmpldata.List.Data {
+			//m := make()
+			lockeddown := "Yes"
+			if !url.IsLockedDown {
+				lockeddown = "No"
+			}
+			table.Append([]string{url.Url, lockeddown})
+		}
+		table.Render()
+
+		output += buffer.String()
+	}
 	return output, nil
 }

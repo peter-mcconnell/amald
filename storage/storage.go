@@ -36,6 +36,8 @@ func LoadData(config map[string]map[string]string) ([]byte, error) {
 func StoreData(reportonly bool, passedurls map[string]defs.SiteDefinition,
 	config map[string]map[string]string) ([]byte, error) {
 
+	log.Debug("storage/storage StoreData passedurls\n", passedurls)
+
 	var (
 		data []byte
 		err  error

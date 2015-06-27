@@ -52,14 +52,15 @@ func main() {
 		log.Fatalf("Failed to grab loaders")
 	}
 
-	// Load Data
+	// load data
 	if _, err := storage.LoadData(config.Storage); err != nil {
 		log.Warnf("Failed to LoadData")
 	}
 
-	// Store Data
+	// store data
 	if !*reportonly {
 		urls := loaders.CollectUrls()
+		log.Debug("URLS:\n", urls)
 		if _, err := storage.StoreData(*reportonly, urls, config.Storage); err != nil {
 			log.Fatalf("Failed to StoreData")
 		}

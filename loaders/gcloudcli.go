@@ -43,7 +43,7 @@ func execGcloudProjects() string {
 	cmd.Stdout = &out
 	err := cmd.Run()
 	if err != nil {
-		log.Fatalf("failed to exec gcloud projects cmd: %s", err)
+		log.Fatalf("failed to exec gcloud alpha projects list: %s", err)
 	}
 	return out.String()
 }
