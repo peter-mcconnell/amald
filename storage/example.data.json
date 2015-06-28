@@ -1,0 +1,28 @@
+{
+    "data": [
+        {
+            "2015-06-28T13:37:44Z": [
+                {
+                    "url": "https://google.com",
+                    "islockeddown": false
+                },
+                {
+                    "url": "https://test.com/",
+                    "islockeddown": true
+                }
+            ]
+        },
+        {
+            "2015-05-27T13:37:44Z": [
+                {
+                    "url": "https://google.com",
+                    "islockeddown": false
+                },
+                {
+                    "url": "https://test.com/",
+                    "islockeddown": true
+                }
+            ]
+        }
+    ]
+}

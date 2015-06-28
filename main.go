@@ -4,9 +4,11 @@ import (
 	"flag"
 	log "github.com/Sirupsen/logrus"
 	"github.com/pemcconnell/amald/config"
+	"github.com/pemcconnell/amald/defs"
 	"github.com/pemcconnell/amald/loaders"
+	"github.com/pemcconnell/amald/storage"
+	"github.com/pemcconnell/amald/urltest"
 	//	"github.com/pemcconnell/amald/notifiers"
-	//	"github.com/pemcconnell/amald/storage"
 )
 
 const (
@@ -14,16 +16,14 @@ const (
 )
 
 var (
-	configpath = flag.String("c", "./config.yaml",
+	configPath = flag.String("c", "./config.yaml",
 		"[config] set the path for the yaml config file. This defaults to "+
 			"./config.yaml")
-	templatepath = flag.String("t", "reports/tmpl/",
+	templatePath = flag.String("t", "reports/tmpl/",
 		"[templates directory] set the path for the templates directory")
-	loglevel = flag.String("v", "info",
+	logLevel = flag.String("v", "info",
 		"[loglevel] set the verbosity of the log levels. Can be: debug, "+
 			"info, warn, error, panic, fatal")
-	reportonly = flag.Bool("r", false, "[report only] if true amald will "+
-		"not run a scan but will instead only display a report")
 )
 
 func init() {
@@ -31,29 +31,49 @@ func init() {
 	flag.Parse()
 
 	// Set logrus level
-	if level, err := log.ParseLevel(*loglevel); err == nil {
+	if level, err := log.ParseLevel(*logLevel); err == nil {
 		log.SetLevel(level)
 	}
 }
 
 func main() {
 
+	res := defs.Results{}
+
 	// load the config
-	cfg, err := config.Load(*configpath)
+	cfg, err := config.Load(*configPath)
 	if err != nil {
-		log.Fatalf("Failed to load the config from %s", *configpath)
+		log.Fatalf("Failed to load the config from %s", *configPath)
 	}
 
 	// collect list of URLs from all possible loaders
 	loaders.GetLoaders(cfg.Loaders)
-	loaders.CollectUrls()
+	urls, err := loaders.CollectUrls()
+	if err != nil {
+		log.Fatalf("Failed to CollectUrls(): %s", err)
+	}
 
 	// test all of the urls
+	scanResults, err := urltest.Batch(urls)
+	if err != nil {
+		log.Fatalf("Failed to Batch urltest: %s", err)
+	}
+	res.Current = scanResults
 
-	// interact with storage
-	//// store latest scan results
+	// store latest test
+	if cfg.Tests["storage"] {
+		// store results
+		storage.StoreScan(cfg.Storage["json"]["path"], scanResults)
+	}
 
-	//// compare latest scan with previously stored results
+	// grab a summary (compare current scan against old data)
+	if cfg.Tests["storage"] {
+		summary, err := storage.GetSummary(cfg.Storage["json"]["path"])
+		if err != nil {
+			log.Fatalf("Failed to get summary: %s", err)
+		}
+		res.Summary = summary
+	}
 
 	// fire off each notifier
 

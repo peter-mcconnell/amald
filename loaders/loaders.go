@@ -5,7 +5,7 @@ import (
 )
 
 type UrlsLoader interface {
-	FetchUrls() []string
+	FetchUrls() ([]string, error)
 }
 
 var (
@@ -13,6 +13,7 @@ var (
 )
 
 func GetLoaders(activeloaders map[string]map[string]string) {
+
 	log.Debug("get loaders")
 	// check to see if gcloudcli has been specified in the config
 	if _, ok := activeloaders["gcloudcli"]; ok {
@@ -34,15 +35,19 @@ func GetLoaders(activeloaders map[string]map[string]string) {
 }
 
 // Collect URL information from each of the loaders
-func CollectUrls() []string {
+func CollectUrls() ([]string, error) {
 	log.Debug("collect urls")
 	m := []string{}
 	for _, loader := range loaders {
-		f := loader.FetchUrls()
-		for _, v := range f {
-			m = append(m, v)
+		if f, err := loader.FetchUrls(); err == nil {
+			for _, v := range f {
+				m = append(m, v)
+			}
+		} else {
+			log.Fatalf("FetchUrls failed: %s", err)
+			return m, err
 		}
 	}
 	log.Debug("found these urls:\n", m)
-	return m
+	return m, nil
 }

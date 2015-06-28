@@ -26,11 +26,12 @@ func textfileLoaderAvailable(settings map[string]string) bool {
 }
 
 // ScanUrls calls some Gcloud CLI commands, parses the output
-func (l *LoaderTextfile) FetchUrls() []string {
+func (l *LoaderTextfile) FetchUrls() ([]string, error) {
 	m := []string{}
 	file, err := os.Open(textfile_path)
 	if err != nil {
 		log.Fatal(err)
+		return m, err
 	}
 	defer file.Close()
 
@@ -41,6 +42,7 @@ func (l *LoaderTextfile) FetchUrls() []string {
 
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
+		return m, err
 	}
-	return m
+	return m, nil
 }
