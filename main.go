@@ -68,11 +68,8 @@ func main() {
 			log.Fatalf("Failed to get summary: %s", err)
 		}
 		// store latest test
-		if cfg.Tests["storage"] {
-			// store results
-			merged := storage.MergeData(scanResults, olddata)
-			storage.StoreScan(cfg.Storage["json"]["path"], merged)
-		}
+		merged := storage.MergeData(scanResults, olddata)
+		storage.StoreScan(cfg.Storage["json"]["path"], merged)
 	}
 
 	// fire off each notifier
