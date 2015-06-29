@@ -15,6 +15,9 @@ func TestLoad(t *testing.T) {
 	if err != nil {
 		t.Fatalf("encountered error: %s", err)
 	}
+	if _, ok := cfg.Reports["templates"]["path"]; !ok {
+		t.Fatal("templates path not set")
+	}
 }
 
 func TestLoadersExist(t *testing.T) {

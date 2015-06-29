@@ -1,5 +1,7 @@
 package defs
 
+import "time"
+
 type Config struct {
 	Loaders map[string]map[string]string `json:loaders,omitempty`
 	Reports map[string]map[string]string `json:reports,omitempty`
@@ -19,4 +21,15 @@ type Results struct {
 
 type Records struct {
 	Records []Results `json:"records"`
+}
+
+// SiteDefinitionsToResults takes a series of SiteDefinition and turns them into a format
+// we can use for our storage
+func SiteDefinitionsToResults(scanResults []SiteDefinition) Results {
+	// combine metadata and scan results, then convert to json
+	data := Results{
+		Timestamp: time.Now().UTC().Format(time.RFC3339),
+		Results:   scanResults,
+	}
+	return data
 }

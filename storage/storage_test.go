@@ -2,12 +2,12 @@ package storage
 
 import (
 	"github.com/pemcconnell/amald/defs"
-	"regexp"
 	"testing"
 )
 
 var (
 	scanResults []defs.SiteDefinition
+	olddata     defs.Records
 )
 
 func init() {
@@ -18,16 +18,19 @@ func init() {
 		Url:          "https://test.com/",
 		IsLockedDown: true,
 	})
+	olddata.Records = append(olddata.Records, defs.SiteDefinitionsToResults(scanResults))
 }
 
-func TestFormData(t *testing.T) {
-	if reg, err := regexp.Compile("\\{"); err == nil {
-		if r, err := formData(scanResults); err != nil {
-			t.Errorf("FormData failed: %s", err)
-		} else if reg.FindString(r) == "" {
-			t.Error("Failed to get expected format")
-		}
-	} else {
-		t.Errorf("Problem creating the regex: %s", err)
+func TestMergeData(t *testing.T) {
+	merged := MergeData(scanResults, olddata)
+	if len(merged.Records) != 2 {
+		t.Error("Didn't get expected number of results from MergeData")
+	}
+}
+
+func TestLoadSiteDefsFromStorage(t *testing.T) {
+	_, err := LoadSiteDefsFromStorage("example.data.json")
+	if err != nil {
+		t.Errorf("Failed to LoadSiteDefsFromStorage: %s", err)
 	}
 }

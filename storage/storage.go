@@ -5,7 +5,6 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/pemcconnell/amald/defs"
 	"io/ioutil"
-	"time"
 )
 
 // MergeData simply takes the scanResults and merges it into the existing data
@@ -13,9 +12,28 @@ func MergeData(scanResults []defs.SiteDefinition, olddata defs.Records) defs.Rec
 
 	// add newdata to olddata
 	merged := olddata
-	merged.Records = append(merged.Records, formData(scanResults))
+	merged.Records = append(merged.Records, defs.SiteDefinitionsToResults(scanResults))
 
 	return merged
+}
+
+// StoreScan creates a new entry in storage of the current scan
+func StoreScan(path string, data defs.Records) error {
+	log.Debug("Storing scan results")
+
+	// convert map to string
+	jstr, err := json.Marshal(data)
+	if err != nil {
+		log.Fatalf("Failed to Marshal data: %s", err)
+	}
+
+	// open our storage file so that we can append to it
+	err = ioutil.WriteFile(path, jstr, 0644)
+	if err != nil {
+		log.Fatalf("Failed to writefile: %s", err)
+	}
+
+	return err
 }
 
 // LoadSiteDefsFromStorage will simply load all the recorded SiteDefinitions from storage
@@ -49,35 +67,4 @@ func loadStorageDataFromFile(path string) ([]byte, error) {
 		log.Debugf("loadStorageDataFromFile results: %s", string(f))
 	}
 	return f, nil
-}
-
-// StoreScan creates a new entry in storage of the current scan
-func StoreScan(path string, data defs.Records) error {
-	log.Debug("Storing scan results")
-
-	// convert map to string
-	jstr, err := json.Marshal(data)
-	if err != nil {
-		log.Fatalf("Failed to Marshal data: %s", err)
-	}
-
-	// open our storage file so that we can append to it
-	err = ioutil.WriteFile(path, jstr, 0644)
-	if err != nil {
-		log.Fatalf("Failed to writefile: %s", err)
-	}
-
-	return err
-}
-
-// formData takes a series of SiteDefinition and turns them into a format
-// we can use for our storage
-func formData(scanResults []defs.SiteDefinition) defs.Results {
-	// combine metadata and scan results, then convert to json
-	data := defs.Results{
-		Timestamp: time.Now().UTC().Format(time.RFC3339),
-		Results:   scanResults,
-	}
-
-	return data
 }

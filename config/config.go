@@ -89,5 +89,11 @@ func validateStorageSettings(config defs.Config) (bool, error) {
 // loadDefaults is a placeholder at the moment. If default values are to be set
 // to cover missing fields from the config yaml then they should be set here.
 func loadDefaults(config defs.Config) (defs.Config, error) {
+	if _, ok := config.Reports["templates"]; !ok {
+		config.Reports["templates"] = make(map[string]string)
+	}
+	if _, ok := config.Reports["templates"]["path"]; !ok {
+		config.Reports["templates"]["path"] = ""
+	}
 	return config, nil
 }
