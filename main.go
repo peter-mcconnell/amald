@@ -4,7 +4,7 @@ import (
 	"flag"
 	log "github.com/Sirupsen/logrus"
 	"github.com/pemcconnell/amald/config"
-	"github.com/pemcconnell/amald/defs"
+	//"github.com/pemcconnell/amald/defs"
 	"github.com/pemcconnell/amald/loaders"
 	"github.com/pemcconnell/amald/storage"
 	"github.com/pemcconnell/amald/urltest"
@@ -38,8 +38,6 @@ func init() {
 
 func main() {
 
-	res := defs.Results{}
-
 	// load the config
 	cfg, err := config.Load(*configPath)
 	if err != nil {
@@ -62,7 +60,6 @@ func main() {
 	if len(scanResults) == 0 {
 		log.Fatal("No URLs found in loaders")
 	}
-	res.Current = scanResults
 
 	// grab a summary (compare current scan against old data)
 	if cfg.Tests["storage"] {

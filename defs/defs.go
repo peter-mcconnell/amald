@@ -13,14 +13,10 @@ type SiteDefinition struct {
 }
 
 type Results struct {
-	Current []SiteDefinition            // []{Url, IsLockedDown}
-	Summary map[string][]SiteDefinition // ["lastweek"][]{Url, IsLockedDown}
+	Timestamp string           `json:"timestamp"`
+	Results   []SiteDefinition `json:"results"`
 }
 
-type JsonFormat struct {
-	Data map[string][]SiteDefinition `json:"data"`
-}
-
-type TestFormat struct {
-	Data []string `json:"data"`
+type Records struct {
+	Records []Results `json:"records"`
 }

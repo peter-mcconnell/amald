@@ -9,43 +9,31 @@ import (
 )
 
 // MergeData simply takes the scanResults and merges it into the existing data
-func MergeData(scanResults []defs.SiteDefinition, olddata map[string][]defs.SiteDefinition) map[string][]defs.SiteDefinition {
-
-	// turn our scanResults into a slightly more informative json string
-	newdata := formData(scanResults)
-
-	log.Debugf("olddata %+v", olddata)
-	log.Debugf("newdata %+v", newdata)
+func MergeData(scanResults []defs.SiteDefinition, olddata defs.Records) defs.Records {
 
 	// add newdata to olddata
 	merged := olddata
-	for ts, data := range newdata {
-		merged[ts] = data
-	}
-
-	log.Debugf("merged %+v", merged)
+	merged.Records = append(merged.Records, formData(scanResults))
 
 	return merged
 }
 
 // LoadSiteDefsFromStorage will simply load all the recorded SiteDefinitions from storage
-func LoadSiteDefsFromStorage(path string) (map[string][]defs.SiteDefinition, error) {
-	summary := make(map[string][]defs.SiteDefinition)
+func LoadSiteDefsFromStorage(path string) (defs.Records, error) {
 	log.Debug("get summary")
-	data, err := loadStorageDataFromFile("tmp/test.json") //path)
+	summary := defs.Records{}
+	data, err := loadStorageDataFromFile(path)
 	if err == nil {
-		// turn string into map
-		//summaryJson := defs.JsonFormat{}
-		summaryJson := defs.TestFormat{}
-		err = json.Unmarshal(data, &summaryJson)
-		if err == nil {
-			log.Debugf("LoadSiteDefsFromStorage results: %+v", summary)
+		if string(data) != "" {
+			// turn string into map
+			err = json.Unmarshal(data, &summary)
+			if err == nil {
+				log.Debugf("LoadSiteDefsFromStorage results: %+v", summary)
+			}
 		}
 	} else {
 		log.Fatalf("Failed to loadStorageDataFromFile: %s", err)
 	}
-	log.Debugf("x %+v", string(data))
-	log.Fatalf("hey %+v", summary)
 	return summary, err
 }
 
@@ -64,7 +52,7 @@ func loadStorageDataFromFile(path string) ([]byte, error) {
 }
 
 // StoreScan creates a new entry in storage of the current scan
-func StoreScan(path string, data map[string][]defs.SiteDefinition) error {
+func StoreScan(path string, data defs.Records) error {
 	log.Debug("Storing scan results")
 
 	// convert map to string
@@ -84,9 +72,12 @@ func StoreScan(path string, data map[string][]defs.SiteDefinition) error {
 
 // formData takes a series of SiteDefinition and turns them into a format
 // we can use for our storage
-func formData(scanResults []defs.SiteDefinition) map[string][]defs.SiteDefinition {
+func formData(scanResults []defs.SiteDefinition) defs.Results {
 	// combine metadata and scan results, then convert to json
-	data := make(map[string][]defs.SiteDefinition)
-	data[time.Now().UTC().Format(time.RFC3339)] = scanResults
+	data := defs.Results{
+		Timestamp: time.Now().UTC().Format(time.RFC3339),
+		Results:   scanResults,
+	}
+
 	return data
 }
