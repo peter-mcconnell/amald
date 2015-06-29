@@ -14,14 +14,13 @@ type SiteDefinition struct {
 
 type Results struct {
 	Current []SiteDefinition            // []{Url, IsLockedDown}
-	Summary map[string][]SiteDefinition // ["lastweek"][]{Url. IsLockedDown}
+	Summary map[string][]SiteDefinition // ["lastweek"][]{Url, IsLockedDown}
 }
 
 type JsonFormat struct {
-	Data map[string][]SubJsonFormat
+	Data map[string][]SiteDefinition `json:"data"`
 }
 
-type SubJsonFormat struct {
-	Meta map[string]string `json:"Meta"`
-	Data []SiteDefinition  `json:"Data"`
+type TestFormat struct {
+	Data []string `json:"data"`
 }

@@ -55,6 +55,8 @@ func Load(path string) (defs.Config, error) {
 	}
 	config.Tests["storage"] = valid
 
+	log.Debugf("config loaded: %+v", config)
+
 	return config, err
 }
 

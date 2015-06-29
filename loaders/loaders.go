@@ -14,7 +14,7 @@ var (
 
 func GetLoaders(activeloaders map[string]map[string]string) {
 
-	log.Debug("get loaders")
+	log.Debugf("get loaders: %+v", activeloaders)
 	// check to see if gcloudcli has been specified in the config
 	if _, ok := activeloaders["gcloudcli"]; ok {
 		// gcloudcli has been specified. See if we can run it

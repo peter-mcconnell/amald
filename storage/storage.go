@@ -5,24 +5,48 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/pemcconnell/amald/defs"
 	"io/ioutil"
-	"os"
 	"time"
 )
 
-func GetSummary(path string) (map[string][]defs.SiteDefinition, error) {
-	log.Debug("get summary")
-	if data, err := loadStorageDataFromFile(path); err != nil {
-		log.Fatalf("Failed to loadStorageDataFromFile: %s", err)
-	} else {
-		// turn string into map
-		summary := defs.JsonFormat{}
-		err := json.Unmarshal(data, &summary)
-		if err != nil {
-			log.Fatalf("Failted to unmarshall: %s", err)
-			return summary, err
-		}
+// MergeData simply takes the scanResults and merges it into the existing data
+func MergeData(scanResults []defs.SiteDefinition, olddata map[string][]defs.SiteDefinition) map[string][]defs.SiteDefinition {
+
+	// turn our scanResults into a slightly more informative json string
+	newdata := formData(scanResults)
+
+	log.Debugf("olddata %+v", olddata)
+	log.Debugf("newdata %+v", newdata)
+
+	// add newdata to olddata
+	merged := olddata
+	for ts, data := range newdata {
+		merged[ts] = data
 	}
-	return summary, nil
+
+	log.Debugf("merged %+v", merged)
+
+	return merged
+}
+
+// LoadSiteDefsFromStorage will simply load all the recorded SiteDefinitions from storage
+func LoadSiteDefsFromStorage(path string) (map[string][]defs.SiteDefinition, error) {
+	summary := make(map[string][]defs.SiteDefinition)
+	log.Debug("get summary")
+	data, err := loadStorageDataFromFile("tmp/test.json") //path)
+	if err == nil {
+		// turn string into map
+		//summaryJson := defs.JsonFormat{}
+		summaryJson := defs.TestFormat{}
+		err = json.Unmarshal(data, &summaryJson)
+		if err == nil {
+			log.Debugf("LoadSiteDefsFromStorage results: %+v", summary)
+		}
+	} else {
+		log.Fatalf("Failed to loadStorageDataFromFile: %s", err)
+	}
+	log.Debugf("x %+v", string(data))
+	log.Fatalf("hey %+v", summary)
+	return summary, err
 }
 
 // loadStorageDataFromFile returns a byte array of all the available
@@ -33,46 +57,36 @@ func loadStorageDataFromFile(path string) ([]byte, error) {
 	if err != nil {
 		log.Fatalf("Problem reading file: %s", err)
 		return f, err
+	} else {
+		log.Debugf("loadStorageDataFromFile results: %s", string(f))
 	}
 	return f, nil
 }
 
 // StoreScan creates a new entry in storage of the current scan
-func StoreScan(path string, scanResults []defs.SiteDefinition) {
+func StoreScan(path string, data map[string][]defs.SiteDefinition) error {
 	log.Debug("Storing scan results")
-	// turn our scanResults into a slightly more informative json string
-	jstr, err := formData(scanResults)
+
+	// convert map to string
+	jstr, err := json.Marshal(data)
 	if err != nil {
-		log.Fatalf("Failed to formData: %s", err)
+		log.Fatalf("Failed to Marshal data: %s", err)
 	}
 
 	// open our storage file so that we can append to it
-	f, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY, 0600)
+	err = ioutil.WriteFile(path, jstr, 0644)
 	if err != nil {
-		log.Fatalf("Failed to open file")
+		log.Fatalf("Failed to writefile: %s", err)
 	}
 
-	defer func() {
-		if err := f.Close(); err != nil {
-			log.Fatalf("Problem closing file: %s", err)
-		}
-	}()
-
-	if _, err := f.WriteString(jstr); err != nil {
-		log.Fatalf("Failed to write to storage: %s", err)
-	}
+	return err
 }
 
-func formData(scanResults []defs.SiteDefinition) (string, error) {
-	// create a meta map so that we can store some additional information
-	meta := make(map[string]string)
-	meta["timestamp"] = time.Now().UTC().Format(time.RFC3339)
+// formData takes a series of SiteDefinition and turns them into a format
+// we can use for our storage
+func formData(scanResults []defs.SiteDefinition) map[string][]defs.SiteDefinition {
 	// combine metadata and scan results, then convert to json
-	j, err := json.Marshal(defs.JsonFormat{
-		Meta: meta,
-		Data: scanResults,
-	})
-	// add a newline to the end of this scan entry
-	j = append(j, []byte("\n")...)
-	return string(j), err
+	data := make(map[string][]defs.SiteDefinition)
+	data[time.Now().UTC().Format(time.RFC3339)] = scanResults
+	return data
 }

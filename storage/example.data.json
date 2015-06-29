@@ -1,7 +1,8 @@
 {
-    "data": [
+    "records": [
         {
-            "2015-06-28T13:37:44Z": [
+            "timestamp" : "2015-06-27T14:24:32Z",
+            "results": [
                 {
                     "url": "https://google.com",
                     "islockeddown": false
@@ -13,7 +14,8 @@
             ]
         },
         {
-            "2015-05-27T13:37:44Z": [
+            "timestamp" : "2015-05-27T13:37:44Z", 
+            "results" : [
                 {
                     "url": "https://google.com",
                     "islockeddown": false

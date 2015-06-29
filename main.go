@@ -58,21 +58,24 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to Batch urltest: %s", err)
 	}
-	res.Current = scanResults
-
-	// store latest test
-	if cfg.Tests["storage"] {
-		// store results
-		storage.StoreScan(cfg.Storage["json"]["path"], scanResults)
+	// if there aren't any urls found, don't continue
+	if len(scanResults) == 0 {
+		log.Fatal("No URLs found in loaders")
 	}
+	res.Current = scanResults
 
 	// grab a summary (compare current scan against old data)
 	if cfg.Tests["storage"] {
-		summary, err := storage.GetSummary(cfg.Storage["json"]["path"])
+		olddata, err := storage.LoadSiteDefsFromStorage(cfg.Storage["json"]["path"])
 		if err != nil {
 			log.Fatalf("Failed to get summary: %s", err)
 		}
-		res.Summary = summary
+		// store latest test
+		if cfg.Tests["storage"] {
+			// store results
+			merged := storage.MergeData(scanResults, olddata)
+			storage.StoreScan(cfg.Storage["json"]["path"], merged)
+		}
 	}
 
 	// fire off each notifier
