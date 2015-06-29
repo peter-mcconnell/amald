@@ -1,4 +1,3 @@
-// TODO: create a proper template for these. The strings are nasty
 package reports
 
 import (

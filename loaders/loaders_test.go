@@ -6,9 +6,13 @@ import (
 	"testing"
 )
 
-var (
-	testfile = "./example.urls.txt"
-)
+func TestTextfileLoaderAvailable(t *testing.T) {
+	var testfile = make(map[string]string)
+	testfile["path"] = "./example.urls.txt" // target known file
+	if !textfileLoaderAvailable(testfile) {
+		t.Fatal("textfileLoaderAvailable failed to find known file")
+	}
+}
 
 func TestGcloudCLISetup(t *testing.T) {
 	if _, err := execGcloudComponentRequirements(); err != nil {
@@ -39,14 +43,6 @@ func TestTextfileFetchUrls(t *testing.T) {
 	var l = LoaderTextfile{}
 	if _, err := l.FetchUrls(); err != nil {
 		t.Fatalf("FetchUrls failed: %s", err)
-	}
-}
-
-func TestTextfileLoaderAvailable(t *testing.T) {
-	var testfile = make(map[string]string)
-	testfile["path"] = "loaders.go" // target known file
-	if !textfileLoaderAvailable(testfile) {
-		t.Fatal("textfileLoaderAvailable failed to find known file")
 	}
 }
 
