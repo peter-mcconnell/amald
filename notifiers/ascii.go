@@ -11,7 +11,8 @@ type NotifierAscii struct {
 }
 
 // Send the message via mailgun
-func (n *NotifierAscii) Send() {
+func (n *NotifierAscii) Fire() {
+	log.Debug("Firing Ascii Notifier")
 	r := &reports.ReportAscii{}
 	o, err := r.Generate(n.results)
 	if err != nil {

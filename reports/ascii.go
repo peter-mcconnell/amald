@@ -10,5 +10,6 @@ type ReportAscii struct{}
 // in place
 func (r *ReportAscii) Generate(results defs.Results) (string, error) {
 	output := ""
+
 	return output, nil
 }

@@ -75,6 +75,9 @@ func main() {
 		storage.StoreScan(cfg.Storage["json"]["path"], results)
 	}
 
+	// run an analysis on the results, that we can use in reports
+	analysis := results // analysis := defs.AnalyseData(results)
+
 	// fire off each notifier
-	notifiers.FireNotifiers(cfg, results)
+	notifiers.FireNotifiers(cfg, analysis)
 }

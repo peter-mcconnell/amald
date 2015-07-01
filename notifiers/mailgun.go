@@ -15,7 +15,8 @@ type NotifierMailgun struct {
 }
 
 // Send the message via mailgun
-func (n *NotifierMailgun) Send(config map[string]string) {
+func (n *NotifierMailgun) Fire(config map[string]string) {
+	log.Debug("Firing mailgun notifier")
 	r := reports.ReportHTML{
 		Templatepath: n.templatepath,
 	}
