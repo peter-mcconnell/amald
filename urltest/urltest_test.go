@@ -4,13 +4,19 @@ import (
 	"testing"
 )
 
-func TestIsUrlLockedDown(t *testing.T) {
-	if isLockedDown, err := IsUrlLockedDown("https://www.google.com"); err == nil {
-		if isLockedDown == true {
+func TestIsRealUrlLockedDown(t *testing.T) {
+	if sd, err := IsUrlLockedDown("https://www.google.com"); err == nil {
+		if sd.IsLockedDown == true {
 			t.Error("Reporting that google is locked down? We got a problem")
 		}
 	} else {
 		t.Errorf("IsUrlLockedDown failed: %s", err)
+	}
+}
+
+func TestIsFakeUrlLockedDown(t *testing.T) {
+	if _, err := IsUrlLockedDown("https://fake.fake.fake."); err == nil {
+		t.Errorf("IsUrlLockedDown passed for a fake domain: %s", err)
 	}
 }
 

@@ -2,7 +2,7 @@ package defs
 
 import (
 	log "github.com/Sirupsen/logrus"
-	"math"
+	"sort"
 	"time"
 )
 
@@ -20,8 +20,9 @@ type IntervalSettings struct {
 }
 
 type SiteDefinition struct {
-	Url          string `json:"url"`
-	IsLockedDown bool   `json:"islockeddown"`
+	Url            string `json:"url"`
+	IsLockedDown   bool   `json:"islockeddown"`
+	HttpStatusCode int    `json:"httpstatuscode",omitempty`
 }
 
 type Results struct {
@@ -35,6 +36,25 @@ type Records struct {
 
 type Analysis struct {
 	Since map[string][]SiteDefinition
+}
+
+// Implement sort interface on our Records struct
+func (r Records) Len() int {
+	return len(r.Records)
+}
+func (r Records) Less(i, j int) bool {
+	b, err := time.Parse(time.RFC3339, r.Records[i].Timestamp)
+	if err != nil {
+		log.Errorf("Failed to parse time 'b': %s", err)
+	}
+	a, err := time.Parse(time.RFC3339, r.Records[j].Timestamp)
+	if err != nil {
+		log.Errorf("Failed to parse time 'a': %s", err)
+	}
+	return b.After(a)
+}
+func (r Records) Swap(i, j int) {
+	r.Records[i], r.Records[j] = r.Records[j], r.Records[i]
 }
 
 // SiteDefinitionsToRecords takes a series of SiteDefinition and turns them into a format
@@ -54,7 +74,15 @@ func AnalyseRecords(cfg Config, r Records) Analysis {
 	log.Debug("Analysing data")
 	analysis := Analysis{}
 
-	//@TODO: implement sort.Interface on Analysis
+	// lets sort the Records (newest first)
+	sort.Sort(r)
+	// the first item is the scan which we just performed
+	now := r.Records[0]
+	// now loop through the rest
+	for _, rec := range r.Records[1:] {
+		log.Debugf("~~~~>\n%+v", rec)
+	}
+	log.Fatal(now)
 
 	return analysis
 }
