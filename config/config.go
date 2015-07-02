@@ -29,15 +29,18 @@ func Load(path string) (defs.Config, error) {
 	}
 	// does file exist?
 	if _, err := os.Stat(path); err != nil {
+		log.Fatal("Config file not found")
 		return config, err
 	}
 	// read file
 	yamlFile, err := ioutil.ReadFile(path)
 	if err != nil {
+		log.Fatal("Config file could not be read")
 		return config, err
 	}
 	// unmarshal
 	if err = yaml.Unmarshal(yamlFile, &config); err != nil {
+		log.Fatal("Config file could not be unmarshalled")
 		return config, err
 	}
 
@@ -89,6 +92,9 @@ func validateStorageSettings(config defs.Config) (bool, error) {
 // loadDefaults is a placeholder at the moment. If default values are to be set
 // to cover missing fields from the config yaml then they should be set here.
 func loadDefaults(config defs.Config) (defs.Config, error) {
+	if config.Reports == nil {
+		config.Reports = make(map[string]map[string]string)
+	}
 	if _, ok := config.Reports["templates"]; !ok {
 		config.Reports["templates"] = make(map[string]string)
 	}

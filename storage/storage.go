@@ -13,7 +13,7 @@ func MergeData(scanResults []defs.SiteDefinition, olddata defs.Records) defs.Rec
 
 	// add newdata to olddata
 	merged := olddata
-	merged.Records = append(merged.Records, defs.SiteDefinitionsToResults(scanResults))
+	merged.Records = append(merged.Records, defs.SiteDefinitionsToRecords(scanResults).Records...)
 
 	return merged
 }

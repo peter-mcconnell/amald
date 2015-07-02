@@ -62,7 +62,7 @@ func main() {
 		log.Fatal("No URLs found in loaders")
 	}
 
-	results := defs.SiteDefinitionsToResults(scanResults)
+	records := defs.SiteDefinitionsToRecords(scanResults)
 
 	// grab a summary (compare current scan against old data)
 	if cfg.Tests["storage"] {
@@ -71,12 +71,12 @@ func main() {
 			log.Fatalf("Failed to get summary: %s", err)
 		}
 		// store latest test
-		results := storage.MergeData(scanResults, olddata)
-		storage.StoreScan(cfg.Storage["json"]["path"], results)
+		records = storage.MergeData(scanResults, olddata)
+		storage.StoreScan(cfg.Storage["json"]["path"], records)
 	}
 
 	// run an analysis on the results, that we can use in reports
-	analysis := defs.AnalyseData(results)
+	analysis := defs.AnalyseRecords(cfg, records)
 
 	// fire off each notifier
 	notifiers.FireNotifiers(cfg, analysis)

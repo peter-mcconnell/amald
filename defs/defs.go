@@ -2,14 +2,21 @@ package defs
 
 import (
 	log "github.com/Sirupsen/logrus"
+	"math"
 	"time"
 )
 
 type Config struct {
-	Loaders map[string]map[string]string `json:loaders,omitempty`
-	Reports map[string]map[string]string `json:reports,omitempty`
-	Storage map[string]map[string]string `json:storage,omitempty`
-	Tests   map[string]bool
+	Loaders          map[string]map[string]string `json:loaders,omitempty`
+	Reports          map[string]map[string]string `json:reports,omitempty`
+	Storage          map[string]map[string]string `json:storage,omitempty`
+	SummaryIntervals []IntervalSettings           `json:summary_intervals,omitempty`
+	Tests            map[string]bool
+}
+
+type IntervalSettings struct {
+	Title        string `json:"title"`
+	DistanceDays int    `json:"distance_days"`
 }
 
 type SiteDefinition struct {
@@ -30,22 +37,24 @@ type Analysis struct {
 	Since map[string][]SiteDefinition
 }
 
-// SiteDefinitionsToResults takes a series of SiteDefinition and turns them into a format
+// SiteDefinitionsToRecords takes a series of SiteDefinition and turns them into a format
 // we can use for our storage
-func SiteDefinitionsToResults(scanResults []SiteDefinition) Results {
+func SiteDefinitionsToRecords(scanResults []SiteDefinition) Records {
 	// combine metadata and scan results, then convert to json
-	data := Results{
+	records := Records{}
+	records.Records = append(records.Records, Results{
 		Timestamp: time.Now().UTC().Format(time.RFC3339),
 		Results:   scanResults,
-	}
-	return data
+	})
+	return records
 }
 
-func AnalyseData(results Results) Analysis {
+// AnalyseRecords compares the most recent result against other entries
+func AnalyseRecords(cfg Config, r Records) Analysis {
 	log.Debug("Analysing data")
 	analysis := Analysis{}
-	for _, sd := range results.Results {
-		log.Debugf("%s is %b", sd.Url, sd.IsLockedDown)
-	}
+
+	//@TODO: implement sort.Interface on Analysis
+
 	return analysis
 }
