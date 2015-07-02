@@ -76,7 +76,7 @@ func main() {
 	}
 
 	// run an analysis on the results, that we can use in reports
-	analysis := results // analysis := defs.AnalyseData(results)
+	analysis := defs.AnalyseData(results)
 
 	// fire off each notifier
 	notifiers.FireNotifiers(cfg, analysis)

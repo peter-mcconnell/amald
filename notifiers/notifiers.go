@@ -9,12 +9,12 @@ type NotifierLoader interface {
 	Fire(map[string]map[string]string, string)
 }
 
-func FireNotifiers(cfg defs.Config, results defs.Results) {
+func FireNotifiers(cfg defs.Config, analysis defs.Analysis) {
 	log.Debug("Firing notifiers ...")
 	// check to see if ascii has been specified in the config
 	if _, ok := cfg.Reports["ascii"]; ok {
 		n := &NotifierAscii{
-			results: results,
+			analysis: analysis,
 		}
 		n.Fire()
 	}
@@ -22,7 +22,7 @@ func FireNotifiers(cfg defs.Config, results defs.Results) {
 	// check to see if mailgun has been specified in the config
 	if _, ok := cfg.Reports["mailgun"]; ok {
 		n := &NotifierMailgun{
-			results:      results,
+			analysis:     analysis,
 			templatepath: cfg.Reports["templates"]["path"],
 		}
 		n.Fire(cfg.Loaders["mailgun"])

@@ -1,6 +1,9 @@
 package defs
 
-import "time"
+import (
+	log "github.com/Sirupsen/logrus"
+	"time"
+)
 
 type Config struct {
 	Loaders map[string]map[string]string `json:loaders,omitempty`
@@ -23,6 +26,10 @@ type Records struct {
 	Records []Results `json:"records"`
 }
 
+type Analysis struct {
+	Since map[string][]SiteDefinition
+}
+
 // SiteDefinitionsToResults takes a series of SiteDefinition and turns them into a format
 // we can use for our storage
 func SiteDefinitionsToResults(scanResults []SiteDefinition) Results {
@@ -32,4 +39,13 @@ func SiteDefinitionsToResults(scanResults []SiteDefinition) Results {
 		Results:   scanResults,
 	}
 	return data
+}
+
+func AnalyseData(results Results) Analysis {
+	log.Debug("Analysing data")
+	analysis := Analysis{}
+	for _, sd := range results.Results {
+		log.Debugf("%s is %b", sd.Url, sd.IsLockedDown)
+	}
+	return analysis
 }

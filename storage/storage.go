@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 )
 
+//TODO: reverse the order of this
 // MergeData simply takes the scanResults and merges it into the existing data
 func MergeData(scanResults []defs.SiteDefinition, olddata defs.Records) defs.Records {
 
