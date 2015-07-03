@@ -14,17 +14,16 @@ func Batch(urls []string) ([]defs.SiteDefinition, error) {
 			if sd, err := IsUrlLockedDown(url); err == nil {
 				r = append(r, sd)
 			} else {
-				log.Fatalf("TestUrlIsLockedDown failed: %s", err)
-				return r, err
+				log.Warn("Failed to test %s for lockdown. Is the URL correct?")
 			}
 		}
 	}
 	return r, nil
 }
 
-// IsUrlLockedDown checks a URL to see if it returns a 401 or has
-// X-Auto-Login headers
+// IsUrlLockedDown returns a SiteDefinition,err for a given url
 func IsUrlLockedDown(url string) (defs.SiteDefinition, error) {
+	// init return struct
 	sd := defs.SiteDefinition{
 		Url:            url,
 		IsLockedDown:   false,
@@ -33,7 +32,7 @@ func IsUrlLockedDown(url string) (defs.SiteDefinition, error) {
 	resp, err := http.Get(url)
 
 	if err != nil {
-		log.Warnf("CheckRedirect or HTTP protocol error for %s\nerr:%s", url, err)
+		log.Debug(err)
 		return sd, err
 	}
 

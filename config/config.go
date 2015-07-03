@@ -7,7 +7,6 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"strconv"
 )
 
 // LoadConfig returns a Config struct. It builds the config using the provided
@@ -83,8 +82,6 @@ func validateStorageSettings(config defs.Config) (bool, error) {
 			}
 		}
 	}
-
-	log.Debug("config.Storage validated: %s", strconv.FormatBool(settingsValidated))
 
 	return settingsValidated, err
 }
