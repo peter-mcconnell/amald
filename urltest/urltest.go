@@ -14,7 +14,7 @@ func Batch(urls []string) ([]defs.SiteDefinition, error) {
 			if sd, err := IsUrlLockedDown(url); err == nil {
 				r = append(r, sd)
 			} else {
-				log.Warn("Failed to test %s for lockdown. Is the URL correct?")
+				log.Warnf("Failed to test %s for lockdown. Is the URL correct?", url)
 			}
 		}
 	}
