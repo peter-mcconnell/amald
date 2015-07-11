@@ -77,12 +77,12 @@ func validateStorageSettings(config defs.Config) (bool, error) {
 		} else {
 			if _, err = os.Stat(spath); err != nil {
 				log.Errorf("storage settings listed file %s which couldnt be loaded: %s", spath, err)
+				return settingsValidated, err
 			} else {
 				settingsValidated = true
 			}
 		}
 	}
-
 	return settingsValidated, err
 }
 

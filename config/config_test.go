@@ -42,6 +42,40 @@ func TestReportsExist(t *testing.T) {
 	}
 }
 
+func TestSummaryIntervals(t *testing.T) {
+	// ensure our data reflects what we've put in the example file
+	if cfg.SummaryIntervals[0].Title != "yesterday" {
+		t.Fatalf("SummaryIntervals[0].Title wasn't expected: %s", cfg.SummaryIntervals[0].Title)
+	}
+	if cfg.SummaryIntervals[0].DistanceDays != 1 {
+		t.Fatalf("SummaryIntervals[0].DistanceDays wasn't expected: %s", cfg.SummaryIntervals[0].DistanceDays)
+	}
+	if cfg.SummaryIntervals[1].Title != "last week" {
+		t.Fatalf("SummaryIntervals[1].Title wasn't expected: %s", cfg.SummaryIntervals[1].Title)
+	}
+	if cfg.SummaryIntervals[1].DistanceDays != 7 {
+		t.Fatalf("SummaryIntervals[1].DistanceDays wasn't expected: %s", cfg.SummaryIntervals[1].DistanceDays)
+	}
+	if cfg.SummaryIntervals[2].Title != "last month" {
+		t.Fatalf("SummaryIntervals[2].Title wasn't expected: %s", cfg.SummaryIntervals[2].Title)
+	}
+	if cfg.SummaryIntervals[2].DistanceDays != 30 {
+		t.Fatalf("SummaryIntervals[2].DistanceDays wasn't expected: %s", cfg.SummaryIntervals[2].DistanceDays)
+	}
+
+}
+
+func TestSummaryIntervalsExist(t *testing.T) {
+	if len(cfg.SummaryIntervals) == 0 {
+		t.Fatal("Couldn't find any summaryintervals")
+	}
+	// 3 is the known number of summaryintervals in the example file
+	if len(cfg.SummaryIntervals) != 3 {
+		t.Fatal("Found an unexpected number of summaryintervals")
+	}
+
+}
+
 func TestReports(t *testing.T) {
 	if _, ok := cfg.Reports["ascii"]; !ok {
 		t.Fatal("Couldn't find the ascii report")

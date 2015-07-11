@@ -2,6 +2,13 @@ loaders:
   gcloudcli: ~
   textfile: 
     path: "urls.txt"
+summaryintervals:
+  - title: "yesterday"
+    distancedays: 1
+  - title: "last week"
+    distancedays: 7
+  - title: "last month"
+    distancedays: 30
 reports:
   ascii: ~
   mailgun:
@@ -12,5 +19,5 @@ reports:
     subj: "Lockdown status report"
 storage:
   json:
-    path: "./tmp/data.json" # folder must exist
+    path: "../tmp/data.json" # folder must exist
     recordlimit: 100 # careful: this could truncate an existing file
