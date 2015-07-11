@@ -18,7 +18,7 @@ func init() {
 		Url:          "https://test.com/",
 		IsLockedDown: true,
 	})
-	olddata.Records = append(olddata.Records, defs.SiteDefinitionsToResults(scanResults))
+	olddata.Records = append(olddata.Records, defs.SiteDefinitionsToRecords(scanResults).Records...)
 }
 
 func TestMergeData(t *testing.T) {
