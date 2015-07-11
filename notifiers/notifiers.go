@@ -1,57 +1,30 @@
 package notifiers
 
 import (
-	"bytes"
-	"encoding/json"
 	log "github.com/Sirupsen/logrus"
 	"github.com/pemcconnell/amald/defs"
-	"strings"
 )
 
 type NotifierLoader interface {
-	Send(map[string]map[string]string, string)
+	Fire(map[string]map[string]string, string)
 }
 
-func FireNotifiers(templatepath string, jsonbytes []byte,
-	activeloaders map[string]map[string]string) {
-
-	data, err := loadData(jsonbytes)
-	log.Debugf("data\n%s", data)
-	if err != nil {
-		log.Fatalf("there was a problem loading the existing data: %s", err)
-	}
-
+func FireNotifiers(cfg defs.Config, analysis defs.Analysis) {
+	log.Debug("Firing notifiers ...")
 	// check to see if ascii has been specified in the config
-	if _, ok := activeloaders["ascii"]; ok {
-		n := &NotifierAscii{data: data}
-		n.Send()
+	if _, ok := cfg.Reports["ascii"]; ok {
+		n := &NotifierAscii{
+			analysis: analysis,
+		}
+		n.Fire()
 	}
 
 	// check to see if mailgun has been specified in the config
-	if _, ok := activeloaders["mailgun"]; ok {
-		n := &NotifierMailgun{data: data, templatepath: templatepath}
-		n.Send(activeloaders["mailgun"])
-	}
-}
-
-func loadData(jsonbytes []byte) ([]defs.JsonData, error) {
-	var (
-		datalist []defs.JsonData
-		err      error
-	)
-
-	rows := strings.Split(string(jsonbytes), "\n")
-	for _, row := range rows {
-		var data defs.JsonData
-		if row == "" {
-			continue
+	if _, ok := cfg.Reports["mailgun"]; ok {
+		n := &NotifierMailgun{
+			analysis:     analysis,
+			templatepath: cfg.Reports["templates"]["path"],
 		}
-		jsonParser := json.NewDecoder(bytes.NewBufferString(row))
-		if err = jsonParser.Decode(&data); err != nil {
-			log.Fatalf("error parsing data file: %s", err)
-		}
-		datalist = append(datalist, data)
+		n.Fire(cfg.Loaders["mailgun"])
 	}
-
-	return datalist, err
 }

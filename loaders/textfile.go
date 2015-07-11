@@ -3,8 +3,6 @@ package loaders
 import (
 	"bufio"
 	log "github.com/Sirupsen/logrus"
-	"github.com/pemcconnell/amald/defs"
-	"github.com/pemcconnell/amald/urltest"
 	"os"
 	"path/filepath"
 )
@@ -18,7 +16,6 @@ var (
 func textfileLoaderAvailable(settings map[string]string) bool {
 	// does file exist?
 	textfile_path, _ = filepath.Abs(settings["path"])
-	log.Debugf("textfile: %s", textfile_path)
 	_, err := os.Stat(textfile_path)
 	if err != nil {
 		log.Warnf("textfile file not found: %s", textfile_path)
@@ -28,28 +25,24 @@ func textfileLoaderAvailable(settings map[string]string) bool {
 
 }
 
-// ScanUrls calls some Gcloud CLI commands, parses the output & then checks
-// the url using authtest
-func (l *LoaderTextfile) FetchUrls() map[string]defs.SiteDefinition {
-	m := map[string]defs.SiteDefinition{}
+// ScanUrls calls some Gcloud CLI commands, parses the output
+func (l *LoaderTextfile) FetchUrls() ([]string, error) {
+	m := []string{}
 	file, err := os.Open(textfile_path)
 	if err != nil {
 		log.Fatal(err)
+		return m, err
 	}
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		url := scanner.Text()
-		lockeddown, err := urltest.TestUrlIsLockedDown(url)
-		if err != nil {
-			log.WithFields(log.Fields{"url": url}).Fatal(err)
-		}
-		m[url] = defs.SiteDefinition{Url: url, IsLockedDown: lockeddown}
+		m = append(m, scanner.Text())
 	}
 
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
+		return m, err
 	}
-	return m
+	return m, nil
 }
