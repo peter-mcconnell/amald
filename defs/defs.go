@@ -13,6 +13,7 @@ var (
 		"updated": 2,
 		"same":    3,
 	}
+	AllowedDistanceHoursOffset = 0.1
 )
 
 type Config struct {
@@ -110,8 +111,14 @@ func AnalyseRecords(cfg Config, r Records) Summaries {
 	for _, rec := range r.Records[1:] {
 		if distance_hours, err := DistanceHours(now.Timestamp, rec.Timestamp); err == nil {
 			log.Debugf("~disthrs: %d", distance_hours)
+			dh := int(distance_hours)
+			// if the calculated distance isn't matched, try
+			// offsetting the value
+			if _, ok := sikeyref[dh]; ok {
+				dh = FactorOffset(distance_hours)
+			}
 			// has this distance been requested by the user?
-			if _, ok := sikeyref[int(distance_hours)]; ok {
+			if _, ok := sikeyref[dh]; ok {
 				log.Debugf("Found record with distance (%d) specified by user: %s", distance_hours, rec.Timestamp)
 				// loop through each iteration of this distance that the user
 				// has provided. this will likely just be the 1 item
@@ -124,6 +131,13 @@ func AnalyseRecords(cfg Config, r Records) Summaries {
 	}
 
 	return summaries
+}
+
+func FactorOffset(x float64) int {
+	if int(x+AllowedDistanceHoursOffset) != int(x) {
+		return int(x + AllowedDistanceHoursOffset)
+	}
+	return int(x)
 }
 
 // CompareRecords takes two sets of results and compares them

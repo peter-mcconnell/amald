@@ -96,6 +96,18 @@ func init() {
 	}
 }
 
+func TestFactorOffset(t *testing.T) {
+	if FactorOffset(2.9) != 3 {
+		t.Error("Didn't get expected result for 2.9")
+	}
+	if FactorOffset(4.1) != 4 {
+		t.Error("Didn't get expected result for 4.1")
+	}
+	if FactorOffset(4.0) != 4 {
+		t.Error("Didn't get expected result for 4.0")
+	}
+}
+
 func TestDistanceHours(t *testing.T) {
 	if d, err := DistanceHours("2015-07-14T11:00:00Z", "2015-06-14T11:00:00Z"); err != nil {
 		t.Errorf("DistanceHours returned error: %s", err)
@@ -124,7 +136,6 @@ func TestSiteDefinitionsToRecords(t *testing.T) {
 func TestAnalyseRecords(t *testing.T) {
 
 	analysis := AnalyseRecords(config, records)
-
 	// running tests against 'yesterday'
 	if len(analysis["yesterday"]) != 4 {
 		t.Error("Didn't get expected number of analysis results for 'yesterday'")

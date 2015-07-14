@@ -18,9 +18,18 @@ var (
 func (r *ReportAscii) Generate(summaries defs.Summaries) (string, error) {
 	log.Debug(summaries)
 	output := "\n[ SUMMARIES ]\n"
-	table := tablewriter.NewWriter(&buffer)
-	table.SetHeader([]string{"URL", "LockedDown", "Status Code", "Status"})
-	table.Render()
-	output += buffer.String()
+	for title, summary := range summaries {
+		table := tablewriter.NewWriter(&buffer)
+		for ks, k := range defs.StateKeys {
+			table.SetHeader([]string{ks})
+			table.SetHeader([]string{"URL", "LockedDown", "Status Code", "Status"})
+			for _, sd := range summary[k] {
+				table.Append([]string{sd.Url, "x", "y", "z"})
+			}
+		}
+		table.Render()
+		output += "\n " + title + "\n"
+		output += buffer.String()
+	}
 	return output, nil
 }
