@@ -10,7 +10,7 @@ import (
 )
 
 type NotifierMailgun struct {
-	analysis     defs.Analysis
+	summaries    defs.Summaries
 	templatepath string
 }
 
@@ -20,7 +20,7 @@ func (n *NotifierMailgun) Fire(config map[string]string) {
 	r := reports.ReportHTML{
 		Templatepath: n.templatepath,
 	}
-	if message, err := r.Generate(n.analysis); err == nil {
+	if message, err := r.Generate(n.summaries); err == nil {
 		client := &http.Client{}
 		data := url.Values{}
 		data.Add("from", config["from"])

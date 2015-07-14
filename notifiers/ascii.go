@@ -7,14 +7,14 @@ import (
 )
 
 type NotifierAscii struct {
-	analysis defs.Analysis
+	summaries defs.Summaries
 }
 
 // Send the message via mailgun
 func (n *NotifierAscii) Fire() {
 	log.Debug("Firing Ascii Notifier")
 	r := &reports.ReportAscii{}
-	o, err := r.Generate(n.analysis)
+	o, err := r.Generate(n.summaries)
 	if err != nil {
 		log.Fatalf("failed to generate ascii report: %s", err)
 	}

@@ -6,6 +6,13 @@ import (
 	"time"
 )
 
+var StateKeys = map[string]int{
+	"removed": 0,
+	"created": 1,
+	"updated": 2,
+	"same":    3,
+}
+
 type Config struct {
 	Loaders          map[string]map[string]string `json:"loaders",omitempty`
 	Reports          map[string]map[string]string `json:"reports",omitempty`
@@ -34,9 +41,9 @@ type Records struct {
 	Records []Results `json:"records"`
 }
 
-type Analysis struct {
-	Since map[string][]SiteDefinition
-}
+type Analysis map[int][]SiteDefinition // map[int] = 0-3 (deleted, created, updated, same)
+
+type Summaries map[string]Analysis
 
 // Implement sort interface on our Records struct
 func (r Records) Len() int {
@@ -77,36 +84,78 @@ func (s SiKeyStore) Less(i, j int) bool { return s[i] < s[j] }
 func (s SiKeyStore) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
 
 // AnalyseRecords compares the most recent result against other entries
-func AnalyseRecords(cfg Config, r Records) Analysis {
+func AnalyseRecords(cfg Config, r Records) Summaries {
 	log.Debug("Analysing data")
-	analysis := Analysis{}
-	si := SiKeyStore{}
-	// keep a map of interval values
-	//for k, interval := range cfg.SummaryIntervals {
-	//	si[interval.DistanceDays] = k
-	//}
-	sort.Sort(si)
-	log.Debug(cfg.SummaryIntervals)
-	log.Fatal(si)
 	// lets sort the Records (newest first)
 	sort.Sort(r)
 	// the first item is the scan which we just performed
 	now := r.Records[0]
-	for distance, k := range si {
-		log.Debugf("distance %s, key %s", distance, k)
+	summaries := Summaries{}
+	// keep a reference of which days the user has requested
+	sikeyref := make(map[int][]int)
+	for k, si := range cfg.SummaryIntervals {
+		if _, ok := sikeyref[si.DistanceDays]; !ok {
+			sikeyref[si.DistanceDays] = []int{k}
+		} else {
+			// supports the user having more than one entry for a given distance.
+			// not sure this has any value, but will at least give the user an
+			// expected result
+			sikeyref[si.DistanceDays] = append(sikeyref[si.DistanceDays], k)
+		}
 	}
-	// delete:
+	// loop the rest of our records
 	for _, rec := range r.Records[1:] {
-		if distance_days, err := distanceDays(now.Timestamp, rec.Timestamp); err == nil {
-			log.Debugf("distance: %s, err: %s", distance_days, err)
+		if distance_hours, err := distanceHours(now.Timestamp, rec.Timestamp); err == nil {
+			// has this distance been requested by the user?
+			if _, ok := sikeyref[distance_hours/24]; ok {
+				// loop through each iteration of this distance that the user
+				// has provided. this will likely just be the 1 item
+				for _, k := range sikeyref[distance_hours/24] {
+					log.Debug(k)
+					summaries[cfg.SummaryIntervals[k].Title] = CompareRecords(now.Results, rec.Results)
+				}
+			}
 		}
 	}
 
-	return analysis
+	return summaries
 }
 
-// distanceDays takes two timestamp strings and returns the difference in days
-func distanceDays(a, b string) (int, error) {
+// CompareRecords takes two sets of results and compares them
+func CompareRecords(master, other []SiteDefinition) Analysis {
+	a := Analysis{}
+	// store urls
+	mstrByUrl := make(map[string]SiteDefinition)
+	for _, sd := range master {
+		mstrByUrl[sd.Url] = sd
+	}
+	for _, sd := range other {
+		k := "same" // default state
+		if mstr, ok := mstrByUrl[sd.Url]; ok {
+			// url exists in master
+			if sd.IsLockedDown != mstr.IsLockedDown {
+				// IsLockedDown has changed
+				k = "updated"
+			}
+		} else {
+			// url does not exist in master (removed)
+			k = "removed"
+		}
+		a[StateKeys[k]] = append(a[StateKeys[k]], sd)
+		// delete the key from mstr, so we know whats left at the end
+		delete(mstrByUrl, sd.Url)
+	}
+	if len(mstrByUrl) != 0 {
+		// some sitedefinitions where left. these must be new
+		for _, sd := range mstrByUrl {
+			a[StateKeys["created"]] = append(a[StateKeys["created"]], sd)
+		}
+	}
+	return a
+}
+
+// distanceHours takes two timestamp strings and returns the difference in days
+func distanceHours(a, b string) (int, error) {
 	ta, err := time.Parse(time.RFC3339, a)
 	if err != nil {
 		log.Errorf("Failed to parse time: %s")

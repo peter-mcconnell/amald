@@ -16,18 +16,18 @@ const (
 )
 
 var (
-	configPath = flag.String("c", "./config.yaml",
+	configPath = flag.String("configPath", "./config.yaml",
 		"[config] set the path for the yaml config file. This defaults to "+
 			"./config.yaml")
-	templatePath = flag.String("t", "reports/tmpl/",
+	templatePath = flag.String("templatePath", "reports/tmpl/",
 		"[templates directory] set the path for the templates directory")
-	logLevel = flag.String("v", "info",
+	logLevel = flag.String("logLevel", "info",
 		"[loglevel] set the verbosity of the log levels. Can be: debug, "+
 			"info, warn, error, panic, fatal")
 )
 
 func init() {
-	// parse flags
+	// parse flagenikto
 	flag.Parse()
 
 	// Set logrus level
@@ -76,8 +76,8 @@ func main() {
 	}
 
 	// run an analysis on the results, that we can use in reports
-	analysis := defs.AnalyseRecords(cfg, records)
+	summaries := defs.AnalyseRecords(cfg, records)
 
 	// fire off each notifier
-	notifiers.FireNotifiers(cfg, analysis)
+	notifiers.FireNotifiers(cfg, summaries)
 }

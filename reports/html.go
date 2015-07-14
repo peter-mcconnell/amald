@@ -10,7 +10,7 @@ type ReportHTML struct {
 
 // Generate creates an HTML string with all the required data
 // in place
-func (r *ReportHTML) Generate(analysis defs.Analysis) (string, error) {
+func (r *ReportHTML) Generate(summaries defs.Summaries) (string, error) {
 	output := ""
 	return output, nil
 }
