@@ -6,12 +6,14 @@ import (
 	"time"
 )
 
-var StateKeys = map[string]int{
-	"removed": 0,
-	"created": 1,
-	"updated": 2,
-	"same":    3,
-}
+var (
+	StateKeys = map[string]int{
+		"removed": 0,
+		"created": 1,
+		"updated": 2,
+		"same":    3,
+	}
+)
 
 type Config struct {
 	Loaders          map[string]map[string]string `json:"loaders",omitempty`
@@ -22,8 +24,8 @@ type Config struct {
 }
 
 type IntervalSettings struct {
-	Title        string `json:"title"`
-	DistanceDays int    `json:"distancedays"`
+	Title         string `json:"title"`
+	DistanceHours int    `json:"distancehours"`
 }
 
 type SiteDefinition struct {
@@ -85,32 +87,35 @@ func (s SiKeyStore) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
 
 // AnalyseRecords compares the most recent result against other entries
 func AnalyseRecords(cfg Config, r Records) Summaries {
-	log.Debug("Analysing data")
+	log.Debugf("Analysing data. Found %s records", len(r.Records))
 	// lets sort the Records (newest first)
 	sort.Sort(r)
 	// the first item is the scan which we just performed
 	now := r.Records[0]
 	summaries := Summaries{}
-	// keep a reference of which days the user has requested
+	// keep a reference of which hours the user has requested
 	sikeyref := make(map[int][]int)
 	for k, si := range cfg.SummaryIntervals {
-		if _, ok := sikeyref[si.DistanceDays]; !ok {
-			sikeyref[si.DistanceDays] = []int{k}
+		if _, ok := sikeyref[si.DistanceHours]; !ok {
+			sikeyref[si.DistanceHours] = []int{k}
 		} else {
-			// supports the user having more than one entry for a given distance.
-			// not sure this has any value, but will at least give the user an
-			// expected result
-			sikeyref[si.DistanceDays] = append(sikeyref[si.DistanceDays], k)
+			// supports the user having more than one entry for a
+			// given distance. not sure this has any value, but
+			// will at least give the user an expected result
+			sikeyref[si.DistanceHours] = append(sikeyref[si.DistanceHours], k)
 		}
 	}
+	log.Debugf("SummaryIntervalKeyRef: %+v", sikeyref)
 	// loop the rest of our records
 	for _, rec := range r.Records[1:] {
-		if distance_hours, err := distanceHours(now.Timestamp, rec.Timestamp); err == nil {
+		if distance_hours, err := DistanceHours(now.Timestamp, rec.Timestamp); err == nil {
+			log.Debugf("~disthrs: %d", distance_hours)
 			// has this distance been requested by the user?
-			if _, ok := sikeyref[distance_hours/24]; ok {
+			if _, ok := sikeyref[int(distance_hours)]; ok {
+				log.Debugf("Found record with distance (%d) specified by user: %s", distance_hours, rec.Timestamp)
 				// loop through each iteration of this distance that the user
 				// has provided. this will likely just be the 1 item
-				for _, k := range sikeyref[distance_hours/24] {
+				for _, k := range sikeyref[int(distance_hours)] {
 					log.Debug(k)
 					summaries[cfg.SummaryIntervals[k].Title] = CompareRecords(now.Results, rec.Results)
 				}
@@ -123,6 +128,7 @@ func AnalyseRecords(cfg Config, r Records) Summaries {
 
 // CompareRecords takes two sets of results and compares them
 func CompareRecords(master, other []SiteDefinition) Analysis {
+	log.Debug("ComparingRecords...")
 	a := Analysis{}
 	// store urls
 	mstrByUrl := make(map[string]SiteDefinition)
@@ -154,8 +160,9 @@ func CompareRecords(master, other []SiteDefinition) Analysis {
 	return a
 }
 
-// distanceHours takes two timestamp strings and returns the difference in days
-func distanceHours(a, b string) (int, error) {
+// DistanceHours takes two timestamp strings and returns the difference in
+// hours
+func DistanceHours(a, b string) (float64, error) {
 	ta, err := time.Parse(time.RFC3339, a)
 	if err != nil {
 		log.Errorf("Failed to parse time: %s")
@@ -166,5 +173,5 @@ func distanceHours(a, b string) (int, error) {
 		log.Errorf("Failed to parse time: %s")
 		return 0, err
 	}
-	return int(ta.Sub(tb).Hours()), nil
+	return ta.Sub(tb).Hours(), nil
 }

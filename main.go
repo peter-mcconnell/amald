@@ -78,6 +78,8 @@ func main() {
 	// run an analysis on the results, that we can use in reports
 	summaries := defs.AnalyseRecords(cfg, records)
 
+	log.Fatal(summaries)
+
 	// fire off each notifier
 	notifiers.FireNotifiers(cfg, summaries)
 }

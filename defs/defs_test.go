@@ -15,16 +15,16 @@ func init() {
 	config = Config{
 		SummaryIntervals: []IntervalSettings{
 			IntervalSettings{
-				Title:        "yesterday",
-				DistanceDays: 1,
+				Title:         "yesterday",
+				DistanceHours: 24,
 			},
 			IntervalSettings{
-				Title:        "last week",
-				DistanceDays: 7,
+				Title:         "last week",
+				DistanceHours: 168,
 			},
 			IntervalSettings{
-				Title:        "last month",
-				DistanceDays: 30,
+				Title:         "last month",
+				DistanceHours: 720,
 			},
 		},
 	}
@@ -86,13 +86,21 @@ func init() {
 			Results:   oldScanResults,
 		},
 		Results{ // 30 days old
-			Timestamp: "2015-06-15T11:00:00Z",
+			Timestamp: "2015-06-14T11:00:00Z",
 			Results:   oldScanResults,
 		},
 		Results{ // this shouldn't be picked up in our report
 			Timestamp: "2015-07-10T11:00:00Z",
 			Results:   oldScanResults,
 		},
+	}
+}
+
+func TestDistanceHours(t *testing.T) {
+	if d, err := DistanceHours("2015-07-14T11:00:00Z", "2015-06-14T11:00:00Z"); err != nil {
+		t.Errorf("DistanceHours returned error: %s", err)
+	} else if d != 720 {
+		t.Errorf("DistanceHours returned an unexpected value: %d", d)
 	}
 }
 
