@@ -47,20 +47,20 @@ func TestSummaryIntervals(t *testing.T) {
 	if cfg.SummaryIntervals[0].Title != "yesterday" {
 		t.Fatalf("SummaryIntervals[0].Title wasn't expected: %s", cfg.SummaryIntervals[0].Title)
 	}
-	if cfg.SummaryIntervals[0].DistanceDays != 1 {
-		t.Fatalf("SummaryIntervals[0].DistanceDays wasn't expected: %s", cfg.SummaryIntervals[0].DistanceDays)
+	if cfg.SummaryIntervals[0].DistanceHours != 24 {
+		t.Fatalf("SummaryIntervals[0].DistanceHours wasn't expected: %s", cfg.SummaryIntervals[0].DistanceHours)
 	}
 	if cfg.SummaryIntervals[1].Title != "last week" {
 		t.Fatalf("SummaryIntervals[1].Title wasn't expected: %s", cfg.SummaryIntervals[1].Title)
 	}
-	if cfg.SummaryIntervals[1].DistanceDays != 7 {
-		t.Fatalf("SummaryIntervals[1].DistanceDays wasn't expected: %s", cfg.SummaryIntervals[1].DistanceDays)
+	if cfg.SummaryIntervals[1].DistanceHours != 168 {
+		t.Fatalf("SummaryIntervals[1].DistanceHours wasn't expected: %s", cfg.SummaryIntervals[1].DistanceHours)
 	}
 	if cfg.SummaryIntervals[2].Title != "last month" {
 		t.Fatalf("SummaryIntervals[2].Title wasn't expected: %s", cfg.SummaryIntervals[2].Title)
 	}
-	if cfg.SummaryIntervals[2].DistanceDays != 30 {
-		t.Fatalf("SummaryIntervals[2].DistanceDays wasn't expected: %s", cfg.SummaryIntervals[2].DistanceDays)
+	if cfg.SummaryIntervals[2].DistanceHours != 720 {
+		t.Fatalf("SummaryIntervals[2].DistanceHours wasn't expected: %s", cfg.SummaryIntervals[2].DistanceHours)
 	}
 
 }

@@ -27,6 +27,7 @@ type Config struct {
 type IntervalSettings struct {
 	Title         string `json:"title"`
 	DistanceHours int    `json:"distancehours"`
+	Ansii         string `json:"ansii"`
 }
 
 type SiteDefinition struct {
@@ -46,7 +47,7 @@ type Records struct {
 
 type Analysis map[int][]SiteDefinition // map[int] = 0-3 (deleted, created, updated, same)
 
-type Summaries map[string]Analysis
+type Summaries map[int]Analysis
 
 // Implement sort interface on our Records struct
 func (r Records) Len() int {
@@ -123,8 +124,7 @@ func AnalyseRecords(cfg Config, r Records) Summaries {
 				// loop through each iteration of this distance that the user
 				// has provided. this will likely just be the 1 item
 				for _, k := range sikeyref[int(distance_hours)] {
-					log.Debug(k)
-					summaries[cfg.SummaryIntervals[k].Title] = CompareRecords(now.Results, rec.Results)
+					summaries[k] = CompareRecords(now.Results, rec.Results)
 				}
 			}
 		}

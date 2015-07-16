@@ -4,11 +4,14 @@ loaders:
     path: "urls.txt"
 summaryintervals:
   - title: "yesterday"
-    distancedays: 1
+    distancehours: 24
+    ansii: "green+h:black"
   - title: "last week"
-    distancedays: 7
+    distancehours: 168
+    ansii: "red+h:black"
   - title: "last month"
-    distancedays: 30
+    distancehours: 720
+    ansii: "blue+h:black"
 reports:
   ascii: ~
   mailgun:
@@ -17,6 +20,7 @@ reports:
     from: "Lockdown Tracker <postmaster@something.com>"
     to: "Sysadmins <sysadmin@something.com>"
     subj: "Lockdown status report"
+    templatepath: "./reports/tmpl/email/"
 storage:
   json:
     path: "../tmp/data.json" # folder must exist

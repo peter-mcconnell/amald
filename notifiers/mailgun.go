@@ -10,17 +10,17 @@ import (
 )
 
 type NotifierMailgun struct {
-	summaries    defs.Summaries
-	templatepath string
+	Summaries defs.Summaries
+	Cfg       defs.Config
 }
 
 // Send the message via mailgun
 func (n *NotifierMailgun) Fire(config map[string]string) {
 	log.Debug("Firing mailgun notifier")
 	r := reports.ReportHTML{
-		Templatepath: n.templatepath,
+		Templatepath: n.Cfg.Reports["mailgun"]["templatepath"],
 	}
-	if message, err := r.Generate(n.summaries); err == nil {
+	if message, err := r.Generate(n.Summaries); err == nil {
 		client := &http.Client{}
 		data := url.Values{}
 		data.Add("from", config["from"])

@@ -17,14 +17,17 @@ func init() {
 			IntervalSettings{
 				Title:         "yesterday",
 				DistanceHours: 24,
+				Ansii:         "red+h:black",
 			},
 			IntervalSettings{
 				Title:         "last week",
 				DistanceHours: 168,
+				Ansii:         "green+h:black",
 			},
 			IntervalSettings{
 				Title:         "last month",
 				DistanceHours: 720,
+				Ansii:         "blue+h:black",
 			},
 		},
 	}
@@ -137,25 +140,25 @@ func TestAnalyseRecords(t *testing.T) {
 
 	analysis := AnalyseRecords(config, records)
 	// running tests against 'yesterday'
-	if len(analysis["yesterday"]) != 4 {
+	if len(analysis[0]) != 4 {
 		t.Error("Didn't get expected number of analysis results for 'yesterday'")
-	} else if len(analysis["yesterday"][0]) != 1 {
-		t.Errorf("Got unexpected number of analysis results for 'yesterday', removed: %s", len(analysis["yesterday"][0]))
-	} else if analysis["yesterday"][0][0].Url != "http://e" {
+	} else if len(analysis[0][0]) != 1 {
+		t.Errorf("Got unexpected number of analysis results for 'yesterday', removed: %s", len(analysis[0][0]))
+	} else if analysis[0][0][0].Url != "http://e" {
 		t.Error("Didnt get expected result for 'yesterday'[0][0]")
-	} else if len(analysis["yesterday"][1]) != 1 {
-		t.Errorf("Got unexpected number of analysis results for 'yesterday', created: %s", len(analysis["yesterday"][1]))
-	} else if analysis["yesterday"][1][0].Url != "http://d" {
+	} else if len(analysis[0][1]) != 1 {
+		t.Errorf("Got unexpected number of analysis results for 'yesterday', created: %s", len(analysis[0][1]))
+	} else if analysis[0][1][0].Url != "http://d" {
 		t.Error("Didnt get expected result for 'yesterday'[1][0]")
-	} else if len(analysis["yesterday"][2]) != 2 {
-		t.Errorf("Got unexpected number of analysis results for 'yesterday', updated: %s", len(analysis["yesterday"][2]))
-	} else if analysis["yesterday"][2][0].Url != "http://b" {
+	} else if len(analysis[0][2]) != 2 {
+		t.Errorf("Got unexpected number of analysis results for 'yesterday', updated: %s", len(analysis[0][2]))
+	} else if analysis[0][2][0].Url != "http://b" {
 		t.Error("Didnt get expected result for 'yesterday'[2][0]")
-	} else if analysis["yesterday"][2][1].Url != "http://c" {
+	} else if analysis[0][2][1].Url != "http://c" {
 		t.Error("Didnt get expected result for 'yesterday'[2][1]")
-	} else if len(analysis["yesterday"][3]) != 1 {
-		t.Errorf("Got unexpected number of analysis results for 'yesterday', same: %s", len(analysis["yesterday"][3]))
-	} else if analysis["yesterday"][3][0].Url != "http://a" {
+	} else if len(analysis[0][3]) != 1 {
+		t.Errorf("Got unexpected number of analysis results for 'yesterday', same: %s", len(analysis[0][3]))
+	} else if analysis[0][3][0].Url != "http://a" {
 		t.Error("Didnt get expected result for 'yesterday'[3][0]")
 	}
 }
