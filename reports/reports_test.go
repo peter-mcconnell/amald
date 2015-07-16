@@ -11,6 +11,9 @@ var Rpt = Report{}
 func init() {
 	// fake config to use
 	cfg := defs.Config{
+		Global: map[string]string{
+			"templatesdir": "tmpl/",
+		},
 		SummaryIntervals: []defs.IntervalSettings{
 			defs.IntervalSettings{
 				Title:         "yesterday",
@@ -29,7 +32,7 @@ func init() {
 			},
 		},
 	}
-	Rpt.SetCfg(cfg)
+	Rpt.Cfg = cfg
 	// some fake data to use
 	yesterday := make(defs.Analysis)
 	lastweek := yesterday
@@ -166,6 +169,13 @@ func init() {
 	Summaries[0] = yesterday
 	Summaries[1] = lastweek
 	Summaries[2] = lastmonth
+}
+
+func ExampleHtmlGenerate() {
+	output, _ := Rpt.GenerateHtml(Summaries)
+	fmt.Print(output)
+	//Output:
+	//x
 }
 
 func ExampleAsciiGenerate() {

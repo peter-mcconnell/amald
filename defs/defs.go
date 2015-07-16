@@ -17,6 +17,7 @@ var (
 )
 
 type Config struct {
+	Global           map[string]string            `json:"global"`
 	Loaders          map[string]map[string]string `json:"loaders",omitempty`
 	Reports          map[string]map[string]string `json:"reports",omitempty`
 	Storage          map[string]map[string]string `json:"storage",omitempty`

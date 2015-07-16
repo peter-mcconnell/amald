@@ -38,8 +38,6 @@ func (r *Report) GenerateAscii(summaries defs.Summaries) (string, error) {
 			title := r.Cfg.SummaryIntervals[k].Title
 			color := ansi.ColorCode(r.Cfg.SummaryIntervals[k].Ansii)
 
-			log.Warn(k)
-			log.Warn(r.Cfg.SummaryIntervals[k].Ansii)
 			state := ""
 			for _, s := range statekeys {
 				if len(summaries[k][defs.StateKeys[s]]) > 0 {

@@ -15,12 +15,13 @@ type NotifierMailgun struct {
 }
 
 // Send the message via mailgun
-func (n *NotifierMailgun) Fire(config map[string]string) {
+func (n *NotifierMailgun) Fire() {
 	log.Debug("Firing mailgun notifier")
-	r := reports.ReportHTML{
-		Templatepath: n.Cfg.Reports["mailgun"]["templatepath"],
+	r := reports.Report{
+		Cfg: n.Cfg,
 	}
-	if message, err := r.Generate(n.Summaries); err == nil {
+	if message, err := r.GenerateHtml(n.Summaries); err == nil {
+		config := n.Cfg.Reports["mailgun"]
 		client := &http.Client{}
 		data := url.Values{}
 		data.Add("from", config["from"])
