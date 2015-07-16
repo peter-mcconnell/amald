@@ -89,7 +89,7 @@ func (s SiKeyStore) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
 
 // AnalyseRecords compares the most recent result against other entries
 func AnalyseRecords(cfg Config, r Records) Summaries {
-	log.Debugf("Analysing data. Found %s records", len(r.Records))
+	log.Debugf("Analysing data. Found %d records", len(r.Records))
 	// lets sort the Records (newest first)
 	sort.Sort(r)
 	// the first item is the scan which we just performed
