@@ -15,6 +15,7 @@ type NotifierAscii struct {
 func (n *NotifierAscii) Fire() {
 	log.Debug("Firing Ascii Notifier")
 	r := &reports.Report{}
+	r.AnsiColorEnabled = true
 	r.SetCfg(n.Cfg)
 	o, err := r.GenerateAscii(n.Summaries)
 	if err != nil {

@@ -174,7 +174,8 @@ func ExampleAsciiGenerate() {
 	//Output:
 	//[ SUMMARIES ]
 	//
-	//  yesterday
+	// ###########  YESTERDAY  ###########
+	//
 	//  ~ created [since yesterday]
 	// +----------+------------+-------------+
 	// |   URL    | LOCKEDDOWN | STATUS CODE |
@@ -203,7 +204,8 @@ func ExampleAsciiGenerate() {
 	// | http://g | false      |         200 |
 	// +----------+------------+-------------+
 	//
-	//  last week
+	// ###########  LAST WEEK  ###########
+	//
 	//  ~ created [since last week]
 	// +----------+------------+-------------+
 	// |   URL    | LOCKEDDOWN | STATUS CODE |
@@ -232,7 +234,8 @@ func ExampleAsciiGenerate() {
 	// | http://g | false      |         200 |
 	// +----------+------------+-------------+
 	//
-	//  last month
+	// ###########  LAST MONTH  ###########
+	//
 	//  ~ created [since last month]
 	// +----------+------------+-------------+
 	// |   URL    | LOCKEDDOWN | STATUS CODE |

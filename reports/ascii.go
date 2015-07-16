@@ -8,6 +8,7 @@ import (
 	"github.com/olekukonko/tablewriter"
 	"github.com/pemcconnell/amald/defs"
 	"sort"
+	"strings"
 )
 
 var (
@@ -19,7 +20,7 @@ var (
 func (r *Report) GenerateAscii(summaries defs.Summaries) (string, error) {
 	log.Debug(summaries)
 	colorreset := ansi.ColorCode("reset")
-	output := "\n[ SUMMARIES ]\n"
+	output := ""
 	if len(r.Cfg.SummaryIntervals) != 0 {
 		// ensure we're looping summaryintervals in the right order
 		var keys []int
@@ -36,25 +37,40 @@ func (r *Report) GenerateAscii(summaries defs.Summaries) (string, error) {
 		for _, k := range keys {
 			title := r.Cfg.SummaryIntervals[k].Title
 			color := ansi.ColorCode(r.Cfg.SummaryIntervals[k].Ansii)
-			output += "\n " + title + "\n"
+
+			log.Warn(k)
+			log.Warn(r.Cfg.SummaryIntervals[k].Ansii)
+			state := ""
 			for _, s := range statekeys {
-				buffer.Reset()
-				output += " ~ " + s + " [since " + title + "]\n"
-				table := tablewriter.NewWriter(&buffer)
-				table.SetHeader([]string{"URL", "LockedDown", "Status Code"})
-				for _, sd := range summaries[k][defs.StateKeys[s]] {
-					table.Append([]string{sd.Url, fmt.Sprintf("%t", sd.IsLockedDown), fmt.Sprintf("%d", sd.HttpStatusCode)})
+				if len(summaries[k][defs.StateKeys[s]]) > 0 {
+					buffer.Reset()
+					state += " ~ " + s + " [since " + title + "]\n"
+					table := tablewriter.NewWriter(&buffer)
+					table.SetHeader([]string{"URL", "LockedDown", "Status Code"})
+					for _, sd := range summaries[k][defs.StateKeys[s]] {
+						table.Append([]string{sd.Url, fmt.Sprintf("%t", sd.IsLockedDown), fmt.Sprintf("%d", sd.HttpStatusCode)})
+					}
+					table.Render()
+					if r.AnsiColorEnabled {
+						state += color + buffer.String() + colorreset
+					} else {
+						state += buffer.String()
+					}
 				}
-				table.Render()
-				if r.AsciiColorEnabled {
-					output += color + buffer.String() + colorreset
-				} else {
-					output += buffer.String()
-				}
+			}
+			if state != "" {
+				output += "\n###########  " + strings.ToUpper(title) + "  ###########\n\n"
+				output += state
 			}
 		}
 	} else {
 		log.Warn("There have been no summaryintervals defined")
+		output = "no summaryintervals requested. please check your config.yaml"
+	}
+	if output != "" {
+		output = "\n[ SUMMARIES ]\n" + output
+	} else {
+		output = "\n[ SUMMARIES ]\nno data to return"
 	}
 	return output, nil
 }

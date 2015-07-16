@@ -6,7 +6,7 @@ import (
 
 type Report struct {
 	Cfg               defs.Config
-	AsciiColorEnabled bool
+	AnsiColorEnabled bool
 }
 
 func (r *Report) SetCfg(cfg defs.Config) {
