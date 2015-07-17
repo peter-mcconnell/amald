@@ -2,55 +2,55 @@
 {{ template "header" . }}
 <!-- body -->
 <table width="600" cellpadding="0" cellspacing="0">
-<tr>
-    <td style="background-color:#2c2828">
-    <!-- loop summary intervals -->
-        {{ range $siI, $d := .Cfg.SummaryIntervals }}
-            <h2 style="margin:15px 0 0 0; font-style: italic; background: #757ad8; color: #efefef; padding: 5px 0 5px 10px; font-size:14px; line-height:19px; ">&raquo; {{ $d.Title }}</h2>
-            <table width="100%" cellpadding="10" cellspacing="0">
-            {{ range $siT, $summaries := index $.Summaries $siI}}
-                    <tr>
-                        <td style="background-color:#ECF8FF">
-                          <h3 style="color:#757ad8; font-size:14px; font-weight:bold;">
-                            <!-- state title -->
-                            {{ index $.StateKeysByInt $siT }}
-                          </h3>
-                          <table width="100%" cellpadding="2" cellspacing="1">
-                          <thead>
-                          <tr>
-                                <th align="left">
-                                      <h4 style="color:#757ad8; font-size:14px; font-weight:bold; margin:0;">url</h4>
-                                </th>
-                                <th align="center" width="104">
-                                      <h4 style="color:#757ad8; font-size:14px; font-weight:bold; margin:0;">locked down</h4>
-                                </th>
-                                <th align="center" width="104">
-                                      <h4 style="color:#757ad8; font-size:14px; font-weight:bold; margin:0;">http code</h4>
-                                </th>
-                          </tr>
-                          </thead>
-                          <tbody>
-                            {{ range $sd := $summaries }}
-                                {{ $sd.Url }}
-                                    <tr>
-                                        <td style="background-color:#ffffff">
-                                            <a href="{{ $sd.Url }}" style="font-size:13px; color:#757ad8">{{ $sd.Url }}</a>
-                                        </td>
-                                        <td style="{{ if $sd.IsLockedDown }}background:#90ea99{{ else }}background:#ff6633;{{ end }}">
-                                            <div style="text-align:center; font-size:13px; padding:4px;">{{ $sd.IsLockedDown }}</div>
-                                        </td>
-                                        <td>
-                                            {{ $sd.HttpStatusCode }}
-                                        </td>
-                                    </tr>
-                            {{ end }}
-                        </tbody>
-            {{ end }}
-                </table>
-        {{ end }}
-    <!-- end loop summary intervals -->
-    </td>
-</tr>
+	<tr>
+		<td style="background-color:#2c2828">
+			<!-- loop summary intervals -->
+			{{ range $siI, $d := .Cfg.SummaryIntervals }}
+				<h2 style="margin:15px 0 0 0; font-style: italic; background: #757ad8; color: #efefef; padding: 5px 0 5px 10px; font-size:14px; line-height:19px; ">&raquo; {{ $d.Title }}</h2>
+				<table width="100%" cellpadding="10" cellspacing="0">
+					{{ range $siT, $summaries := index $.Summaries $siI}}
+						<tr>
+						<td style="background-color:#ECF8FF">
+							<h3 style="color:#757ad8; font-size:14px; font-weight:bold;">
+								<!-- state title -->
+								{{ index $.StateKeysByInt $siT }}
+							</h3>
+							<table width="100%" cellpadding="2" cellspacing="1">
+							<thead>
+								<tr>
+									<th align="left">
+										<h4 style="color:#757ad8; font-size:14px; font-weight:bold; margin:0;">url</h4>
+									</th>
+									<th align="center" width="104">
+										<h4 style="color:#757ad8; font-size:14px; font-weight:bold; margin:0;">locked down</h4>
+									</th>
+									<th align="center" width="104">
+										<h4 style="color:#757ad8; font-size:14px; font-weight:bold; margin:0;">http code</h4>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+							{{ range $sd := $summaries }}
+								<tr>
+									<td style="background-color:#ffffff">
+										<a href="{{ $sd.Url }}" style="font-size:13px; color:#757ad8">{{ $sd.Url }}</a>
+									</td>
+									<td style="{{ if $sd.IsLockedDown }}background:#90ea99{{ else }}background:#ff6633;{{ end }}">
+										<div style="text-align:center; font-size:13px; padding:4px;">{{ $sd.IsLockedDown }}</div>
+									</td>
+									<td>
+										{{ $sd.HttpStatusCode }}
+									</td>
+								</tr>
+							{{ end }}
+							</tbody>
+							</table>
+						</td>
+						</tr>
+					{{ end }}
+					</table>
+			{{ end }}
+		</td>
+	</tr>
 </table>
-{{ template "footer" . }}
-{{end}}
+{{ end }}

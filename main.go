@@ -19,8 +19,6 @@ var (
 	configPath = flag.String("configPath", "./config.yaml",
 		"[config] set the path for the yaml config file. This defaults to "+
 			"./config.yaml")
-	templatePath = flag.String("templatePath", "reports/tmpl/",
-		"[templates directory] set the path for the templates directory")
 	logLevel = flag.String("logLevel", "info",
 		"[loglevel] set the verbosity of the log levels. Can be: debug, "+
 			"info, warn, error, panic, fatal")
@@ -43,7 +41,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to load the config from %s", *configPath)
 	}
-	cfg.Reports["templates"]["path"] = *templatePath
 
 	// collect list of URLs from all possible loaders
 	loaders.GetLoaders(cfg.Loaders)

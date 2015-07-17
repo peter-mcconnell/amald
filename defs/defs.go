@@ -22,6 +22,7 @@ type Config struct {
 	Reports          map[string]map[string]string `json:"reports",omitempty`
 	Storage          map[string]map[string]string `json:"storage",omitempty`
 	SummaryIntervals []IntervalSettings           `json:"summaryintervals"`
+	ShowSameState    bool                         `json:"showsamestate"`
 	Tests            map[string]bool
 }
 

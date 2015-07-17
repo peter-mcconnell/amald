@@ -30,6 +30,9 @@ func (r *Report) GenerateAscii(summaries defs.Summaries) (string, error) {
 		// ensure we're looping states in the right order
 		var statekeys []string
 		for k := range defs.StateKeys {
+			if k == "same" && r.Cfg.ShowSameState != true {
+				continue
+			}
 			statekeys = append(statekeys, k)
 		}
 		sort.Strings(statekeys)

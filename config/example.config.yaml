@@ -1,5 +1,6 @@
 global:
   templatesdir: "./reports/tmpl/"
+showsamestate: false
 loaders:
   gcloudcli: ~
   textfile: 

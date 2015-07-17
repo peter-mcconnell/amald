@@ -92,11 +92,5 @@ func loadDefaults(config defs.Config) (defs.Config, error) {
 	if config.Reports == nil {
 		config.Reports = make(map[string]map[string]string)
 	}
-	if _, ok := config.Reports["templates"]; !ok {
-		config.Reports["templates"] = make(map[string]string)
-	}
-	if _, ok := config.Reports["templates"]["path"]; !ok {
-		config.Reports["templates"]["path"] = ""
-	}
 	return config, nil
 }
