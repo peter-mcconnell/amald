@@ -46,8 +46,7 @@ func execGcloudProjects() (string, error) {
 // Calls `gcloud preview app modules list` with a specified project and
 // returns the output
 func execGcloudModules(project string) (string, error) {
-	args := []string{"gcloud", "preview", "app", "modules", "list", "--project", project}
-	cmd := exec.Command("gcloud", args...)
+	cmd := exec.Command("gcloud", "preview", "app", "modules", "list", "--project", project)
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	err := cmd.Run()
