@@ -6,5 +6,6 @@ import (
 
 type Report struct {
 	Cfg              defs.Config
+    ScanResults      []defs.SiteDefinition
 	AnsiColorEnabled bool
 }

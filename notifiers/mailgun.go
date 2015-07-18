@@ -10,6 +10,7 @@ import (
 )
 
 type NotifierMailgun struct {
+	ScanResults []defs.SiteDefinition
 	Summaries defs.Summaries
 	Cfg       defs.Config
 }

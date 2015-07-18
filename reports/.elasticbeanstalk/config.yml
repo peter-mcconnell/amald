@@ -1,0 +1,10 @@
+branch-defaults:
+  default:
+    environment: avios-qa
+global:
+  application_name: avios
+  default_ec2_keyname: aws-eb
+  default_platform: 64bit Amazon Linux 2015.03 v1.4.3 running PHP 5.6
+  default_region: eu-west-1
+  profile: eb-cli
+  sc: null
