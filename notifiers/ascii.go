@@ -7,6 +7,7 @@ import (
 )
 
 type NotifierAscii struct {
+	ScanResults []defs.SiteDefinition
 	Summaries defs.Summaries
 	Cfg       defs.Config
 }
@@ -17,6 +18,7 @@ func (n *NotifierAscii) Fire() {
 	r := &reports.Report{
 		AnsiColorEnabled: true,
 		Cfg: n.Cfg,
+		ScanResults: n.ScanResults,
 	}
 	o, err := r.GenerateAscii(n.Summaries)
 	if err != nil {

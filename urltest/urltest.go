@@ -36,8 +36,8 @@ func IsUrlLockedDown(url string) (defs.SiteDefinition, error) {
 		return sd, err
 	}
 
-	// HTTP 401, or User Service login
-	if (resp.StatusCode == 401) || (len(resp.Header["X-Auto-Login"]) > 0) {
+	// HTTP 401, HTTP 403, HTTP 407, or User Service login
+	if (resp.StatusCode == 401) ||  (resp.StatusCode == 403) ||  (resp.StatusCode == 407) ||  (resp.StatusCode == 550) || (len(resp.Header["X-Auto-Login"]) > 0) {
 		sd.IsLockedDown = true
 	}
 

@@ -12,11 +12,13 @@ import (
 func (r *Report) GenerateHtml(summaries defs.Summaries) (string, error) {
 	// format our data
 	type TemplateData struct {
+		ScanResults    []defs.SiteDefinition
 		Summaries      defs.Summaries
 		Cfg            defs.Config
 		StateKeysByInt map[int]string
 	}
 	tmpldata := TemplateData{
+		ScanResults:    r.ScanResults,
 		Summaries:      summaries,
 		Cfg:            r.Cfg,
 		StateKeysByInt: map[int]string{},
