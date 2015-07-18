@@ -92,6 +92,7 @@ func (l *LoaderGcloudCLI) FetchUrls() ([]string, error) {
 				versionscache := make(map[string]bool)
 				for _, version := range versions {
 					if !versionscache[version] {
+						log.Debugf("Found https://%s-dot-%s.appspot.com", version, project)
 						m = append(m, "https://"+version+"-dot-"+project+".appspot.com")
 						versionscache[version] = true
 					}
@@ -99,8 +100,7 @@ func (l *LoaderGcloudCLI) FetchUrls() ([]string, error) {
 			}
 		} else {
 			// execGcloudModules failed
-			log.Fatalf("execGcloudModules command failed for: %s", project)
-			return m, err
+			log.Debugf("execGcloudModules command failed for %s, got:\n", project, err)
 		}
 	}
 
