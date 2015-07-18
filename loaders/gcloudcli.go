@@ -46,7 +46,7 @@ func execGcloudProjects() (string, error) {
 // Calls `gcloud preview app modules list` with a specified project and
 // returns the output
 func execGcloudModules(project string) (string, error) {
-	args := []string{"preview", "app", "modules", "list"}
+	args := []string{"gcloud", "preview", "app", "modules", "list"}
 	if project != "" {
 		args = append(args, "--project", project)
 	}
