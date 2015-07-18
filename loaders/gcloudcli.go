@@ -46,10 +46,7 @@ func execGcloudProjects() (string, error) {
 // Calls `gcloud preview app modules list` with a specified project and
 // returns the output
 func execGcloudModules(project string) (string, error) {
-	args := []string{"gcloud", "preview", "app", "modules", "list"}
-	if project != "" {
-		args = append(args, "--project", project)
-	}
+	args := []string{"gcloud", "preview", "app", "modules", "list", "--project", project}
 	cmd := exec.Command("gcloud", args...)
 	var out bytes.Buffer
 	cmd.Stdout = &out
@@ -103,7 +100,7 @@ func (l *LoaderGcloudCLI) FetchUrls() ([]string, error) {
 			}
 		} else {
 			// execGcloudModules failed
-			log.Fatalf("execGcloudModules command failed")
+			log.Fatalf("execGcloudModules command failed for: %s", project)
 			return m, err
 		}
 	}
