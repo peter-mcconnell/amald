@@ -11,15 +11,16 @@ import (
 
 type NotifierMailgun struct {
 	ScanResults []defs.SiteDefinition
-	Summaries defs.Summaries
-	Cfg       defs.Config
+	Summaries   defs.Summaries
+	Cfg         defs.Config
 }
 
 // Send the message via mailgun
 func (n *NotifierMailgun) Fire() {
 	log.Debug("Firing mailgun notifier")
 	r := reports.Report{
-		Cfg: n.Cfg,
+		Cfg:         n.Cfg,
+		ScanResults: n.ScanResults,
 	}
 	if message, err := r.GenerateHtml(n.Summaries); err == nil {
 		config := n.Cfg.Reports["mailgun"]

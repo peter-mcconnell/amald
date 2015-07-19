@@ -12,8 +12,8 @@ func FireNotifiers(cfg defs.Config, summaries defs.Summaries, scanResults []defs
 	if _, ok := cfg.Reports["ascii"]; ok {
 		n := NotifierAscii{
 			ScanResults: scanResults,
-			Summaries: summaries,
-			Cfg:       cfg,
+			Summaries:   summaries,
+			Cfg:         cfg,
 		}
 		n.Fire()
 	}
@@ -22,8 +22,8 @@ func FireNotifiers(cfg defs.Config, summaries defs.Summaries, scanResults []defs
 	if _, ok := cfg.Reports["mailgun"]; ok {
 		n := NotifierMailgun{
 			ScanResults: scanResults,
-			Summaries: summaries,
-			Cfg:       cfg,
+			Summaries:   summaries,
+			Cfg:         cfg,
 		}
 		n.Fire()
 	}
