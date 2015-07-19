@@ -73,5 +73,15 @@ func (r *Report) GenerateAscii(summaries defs.Summaries) (string, error) {
 	} else {
 		output = "\n[ SUMMARIES ]\nno data to return"
 	}
+	// include latest scan results
+	output += "\n[ LATEST SCAN RESULTS ]\n"
+	buffer.Reset()
+	table := tablewriter.NewWriter(&buffer)
+	table.SetHeader([]string{"URL", "LockedDown", "Status Code"})
+	for _, sd := range r.ScanResults {
+		table.Append([]string{sd.Url, fmt.Sprintf("%t", sd.IsLockedDown), fmt.Sprintf("%d", sd.HttpStatusCode)})
+	}
+	table.Render()
+	output += buffer.String()
 	return output, nil
 }

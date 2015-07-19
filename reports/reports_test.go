@@ -203,7 +203,7 @@ func ExampleHtmlGenerate() {
 	// <table width="100%" cellpadding="0" cellspacing="0">
 	// <tr>
 	//       <td align="center" style="background-color:#2c2828">
-	            
+
 	//             <table width="100%" cellpadding="0" cellspacing="0">
 	//             <tr>
 	//                   <td style="background-color:#757ad8" align="center">
@@ -218,21 +218,19 @@ func ExampleHtmlGenerate() {
 	//             </tr>
 	//             </table>
 
-
 	// <table width="600" cellpadding="0" cellspacing="0">
 	// 	<tr>
 	// 		<td style="background-color:#2c2828">
 	// 			<p>&nbsp;</p>
 	// 			<h2 style="color:#efefef">Summary</h2>
-				
-				
+
 	// 			<h2 style="margin:15px 0 0 0; font-style: italic; background: #757ad8; color: #efefef; padding: 5px 0 5px 10px; font-size:14px; line-height:19px; ">&raquo; since yesterday</h2>
 	// 			<table width="100%" cellpadding="10" cellspacing="0">
-					
+
 	// 				<tr>
 	// 					<td style="background-color:#ECF8FF">
 	// 						<h3 style="color:#757ad8; font-size:14px; font-weight:bold;">
-								
+
 	// 							<em>status:</em> removed
 	// 						</h3>
 	// 						<table width="100%" cellpadding="2" cellspacing="1">
@@ -250,7 +248,7 @@ func ExampleHtmlGenerate() {
 	// 								</tr>
 	// 							</thead>
 	// 							<tbody>
-								
+
 	// 							<tr>
 	// 								<td style="background-color:#ffffff">
 	// 									<a href="http://a" style="font-size:13px; color:#757ad8">http://a</a>
@@ -262,7 +260,7 @@ func ExampleHtmlGenerate() {
 	// 									<div style="text-align:center; font-size:13px; padding:4px;">200</div>
 	// 								</td>
 	// 							</tr>
-								
+
 	// 							<tr>
 	// 								<td style="background-color:#ffffff">
 	// 									<a href="http://b" style="font-size:13px; color:#757ad8">http://b</a>
@@ -274,7 +272,7 @@ func ExampleHtmlGenerate() {
 	// 									<div style="text-align:center; font-size:13px; padding:4px;">401</div>
 	// 								</td>
 	// 							</tr>
-								
+
 	// 							<tr>
 	// 								<td style="background-color:#ffffff">
 	// 									<a href="http://c" style="font-size:13px; color:#757ad8">http://c</a>
@@ -286,16 +284,16 @@ func ExampleHtmlGenerate() {
 	// 									<div style="text-align:center; font-size:13px; padding:4px;">401</div>
 	// 								</td>
 	// 							</tr>
-								
+
 	// 							</tbody>
 	// 						</table>
 	// 					</td>
 	// 				</tr>
-					
+
 	// 				<tr>
 	// 					<td style="background-color:#ECF8FF">
 	// 						<h3 style="color:#757ad8; font-size:14px; font-weight:bold;">
-								
+
 	// 							<em>status:</em> created
 	// 						</h3>
 	// 						<table width="100%" cellpadding="2" cellspacing="1">
@@ -313,7 +311,7 @@ func ExampleHtmlGenerate() {
 	// 								</tr>
 	// 							</thead>
 	// 							<tbody>
-								
+
 	// 							<tr>
 	// 								<td style="background-color:#ffffff">
 	// 									<a href="http://d" style="font-size:13px; color:#757ad8">http://d</a>
@@ -325,7 +323,7 @@ func ExampleHtmlGenerate() {
 	// 									<div style="text-align:center; font-size:13px; padding:4px;">200</div>
 	// 								</td>
 	// 							</tr>
-								
+
 	// 							<tr>
 	// 								<td style="background-color:#ffffff">
 	// 									<a href="http://e" style="font-size:13px; color:#757ad8">http://e</a>
@@ -337,16 +335,16 @@ func ExampleHtmlGenerate() {
 	// 									<div style="text-align:center; font-size:13px; padding:4px;">401</div>
 	// 								</td>
 	// 							</tr>
-								
+
 	// 							</tbody>
 	// 						</table>
 	// 					</td>
 	// 				</tr>
-					
+
 	// 				<tr>
 	// 					<td style="background-color:#ECF8FF">
 	// 						<h3 style="color:#757ad8; font-size:14px; font-weight:bold;">
-								
+
 	// 							<em>status:</em> updated
 	// 						</h3>
 	// 						<table width="100%" cellpadding="2" cellspacing="1">
@@ -364,7 +362,7 @@ func ExampleHtmlGenerate() {
 	// 								</tr>
 	// 							</thead>
 	// 							<tbody>
-								
+
 	// 							<tr>
 	// 								<td style="background-color:#ffffff">
 	// 									<a href="http://g" style="font-size:13px; color:#757ad8">http://g</a>
@@ -376,16 +374,16 @@ func ExampleHtmlGenerate() {
 	// 									<div style="text-align:center; font-size:13px; padding:4px;">200</div>
 	// 								</td>
 	// 							</tr>
-								
+
 	// 							</tbody>
 	// 						</table>
 	// 					</td>
 	// 				</tr>
-					
+
 	// 				<tr>
 	// 					<td style="background-color:#ECF8FF">
 	// 						<h3 style="color:#757ad8; font-size:14px; font-weight:bold;">
-								
+
 	// 							<em>status:</em> same
 	// 						</h3>
 	// 						<table width="100%" cellpadding="2" cellspacing="1">
@@ -403,7 +401,7 @@ func ExampleHtmlGenerate() {
 	// 								</tr>
 	// 							</thead>
 	// 							<tbody>
-								
+
 	// 							<tr>
 	// 								<td style="background-color:#ffffff">
 	// 									<a href="http://l" style="font-size:13px; color:#757ad8">http://l</a>
@@ -415,21 +413,21 @@ func ExampleHtmlGenerate() {
 	// 									<div style="text-align:center; font-size:13px; padding:4px;">401</div>
 	// 								</td>
 	// 							</tr>
-								
+
 	// 							</tbody>
 	// 						</table>
 	// 					</td>
 	// 				</tr>
-					
+
 	// 			</table>
-				
+
 	// 			<h2 style="margin:15px 0 0 0; font-style: italic; background: #757ad8; color: #efefef; padding: 5px 0 5px 10px; font-size:14px; line-height:19px; ">&raquo; since last week</h2>
 	// 			<table width="100%" cellpadding="10" cellspacing="0">
-					
+
 	// 				<tr>
 	// 					<td style="background-color:#ECF8FF">
 	// 						<h3 style="color:#757ad8; font-size:14px; font-weight:bold;">
-								
+
 	// 							<em>status:</em> removed
 	// 						</h3>
 	// 						<table width="100%" cellpadding="2" cellspacing="1">
@@ -447,7 +445,7 @@ func ExampleHtmlGenerate() {
 	// 								</tr>
 	// 							</thead>
 	// 							<tbody>
-								
+
 	// 							<tr>
 	// 								<td style="background-color:#ffffff">
 	// 									<a href="http://a" style="font-size:13px; color:#757ad8">http://a</a>
@@ -459,7 +457,7 @@ func ExampleHtmlGenerate() {
 	// 									<div style="text-align:center; font-size:13px; padding:4px;">200</div>
 	// 								</td>
 	// 							</tr>
-								
+
 	// 							<tr>
 	// 								<td style="background-color:#ffffff">
 	// 									<a href="http://b" style="font-size:13px; color:#757ad8">http://b</a>
@@ -471,7 +469,7 @@ func ExampleHtmlGenerate() {
 	// 									<div style="text-align:center; font-size:13px; padding:4px;">401</div>
 	// 								</td>
 	// 							</tr>
-								
+
 	// 							<tr>
 	// 								<td style="background-color:#ffffff">
 	// 									<a href="http://c" style="font-size:13px; color:#757ad8">http://c</a>
@@ -483,16 +481,16 @@ func ExampleHtmlGenerate() {
 	// 									<div style="text-align:center; font-size:13px; padding:4px;">401</div>
 	// 								</td>
 	// 							</tr>
-								
+
 	// 							</tbody>
 	// 						</table>
 	// 					</td>
 	// 				</tr>
-					
+
 	// 				<tr>
 	// 					<td style="background-color:#ECF8FF">
 	// 						<h3 style="color:#757ad8; font-size:14px; font-weight:bold;">
-								
+
 	// 							<em>status:</em> created
 	// 						</h3>
 	// 						<table width="100%" cellpadding="2" cellspacing="1">
@@ -510,7 +508,7 @@ func ExampleHtmlGenerate() {
 	// 								</tr>
 	// 							</thead>
 	// 							<tbody>
-								
+
 	// 							<tr>
 	// 								<td style="background-color:#ffffff">
 	// 									<a href="http://d" style="font-size:13px; color:#757ad8">http://d</a>
@@ -522,7 +520,7 @@ func ExampleHtmlGenerate() {
 	// 									<div style="text-align:center; font-size:13px; padding:4px;">200</div>
 	// 								</td>
 	// 							</tr>
-								
+
 	// 							<tr>
 	// 								<td style="background-color:#ffffff">
 	// 									<a href="http://e" style="font-size:13px; color:#757ad8">http://e</a>
@@ -534,16 +532,16 @@ func ExampleHtmlGenerate() {
 	// 									<div style="text-align:center; font-size:13px; padding:4px;">401</div>
 	// 								</td>
 	// 							</tr>
-								
+
 	// 							</tbody>
 	// 						</table>
 	// 					</td>
 	// 				</tr>
-					
+
 	// 				<tr>
 	// 					<td style="background-color:#ECF8FF">
 	// 						<h3 style="color:#757ad8; font-size:14px; font-weight:bold;">
-								
+
 	// 							<em>status:</em> updated
 	// 						</h3>
 	// 						<table width="100%" cellpadding="2" cellspacing="1">
@@ -561,7 +559,7 @@ func ExampleHtmlGenerate() {
 	// 								</tr>
 	// 							</thead>
 	// 							<tbody>
-								
+
 	// 							<tr>
 	// 								<td style="background-color:#ffffff">
 	// 									<a href="http://g" style="font-size:13px; color:#757ad8">http://g</a>
@@ -573,16 +571,16 @@ func ExampleHtmlGenerate() {
 	// 									<div style="text-align:center; font-size:13px; padding:4px;">200</div>
 	// 								</td>
 	// 							</tr>
-								
+
 	// 							</tbody>
 	// 						</table>
 	// 					</td>
 	// 				</tr>
-					
+
 	// 				<tr>
 	// 					<td style="background-color:#ECF8FF">
 	// 						<h3 style="color:#757ad8; font-size:14px; font-weight:bold;">
-								
+
 	// 							<em>status:</em> same
 	// 						</h3>
 	// 						<table width="100%" cellpadding="2" cellspacing="1">
@@ -600,7 +598,7 @@ func ExampleHtmlGenerate() {
 	// 								</tr>
 	// 							</thead>
 	// 							<tbody>
-								
+
 	// 							<tr>
 	// 								<td style="background-color:#ffffff">
 	// 									<a href="http://l" style="font-size:13px; color:#757ad8">http://l</a>
@@ -612,21 +610,21 @@ func ExampleHtmlGenerate() {
 	// 									<div style="text-align:center; font-size:13px; padding:4px;">401</div>
 	// 								</td>
 	// 							</tr>
-								
+
 	// 							</tbody>
 	// 						</table>
 	// 					</td>
 	// 				</tr>
-					
+
 	// 			</table>
-				
+
 	// 			<h2 style="margin:15px 0 0 0; font-style: italic; background: #757ad8; color: #efefef; padding: 5px 0 5px 10px; font-size:14px; line-height:19px; ">&raquo; since last month</h2>
 	// 			<table width="100%" cellpadding="10" cellspacing="0">
-					
+
 	// 				<tr>
 	// 					<td style="background-color:#ECF8FF">
 	// 						<h3 style="color:#757ad8; font-size:14px; font-weight:bold;">
-								
+
 	// 							<em>status:</em> removed
 	// 						</h3>
 	// 						<table width="100%" cellpadding="2" cellspacing="1">
@@ -644,7 +642,7 @@ func ExampleHtmlGenerate() {
 	// 								</tr>
 	// 							</thead>
 	// 							<tbody>
-								
+
 	// 							<tr>
 	// 								<td style="background-color:#ffffff">
 	// 									<a href="http://a" style="font-size:13px; color:#757ad8">http://a</a>
@@ -656,7 +654,7 @@ func ExampleHtmlGenerate() {
 	// 									<div style="text-align:center; font-size:13px; padding:4px;">200</div>
 	// 								</td>
 	// 							</tr>
-								
+
 	// 							<tr>
 	// 								<td style="background-color:#ffffff">
 	// 									<a href="http://b" style="font-size:13px; color:#757ad8">http://b</a>
@@ -668,7 +666,7 @@ func ExampleHtmlGenerate() {
 	// 									<div style="text-align:center; font-size:13px; padding:4px;">401</div>
 	// 								</td>
 	// 							</tr>
-								
+
 	// 							<tr>
 	// 								<td style="background-color:#ffffff">
 	// 									<a href="http://c" style="font-size:13px; color:#757ad8">http://c</a>
@@ -680,16 +678,16 @@ func ExampleHtmlGenerate() {
 	// 									<div style="text-align:center; font-size:13px; padding:4px;">401</div>
 	// 								</td>
 	// 							</tr>
-								
+
 	// 							</tbody>
 	// 						</table>
 	// 					</td>
 	// 				</tr>
-					
+
 	// 				<tr>
 	// 					<td style="background-color:#ECF8FF">
 	// 						<h3 style="color:#757ad8; font-size:14px; font-weight:bold;">
-								
+
 	// 							<em>status:</em> created
 	// 						</h3>
 	// 						<table width="100%" cellpadding="2" cellspacing="1">
@@ -707,7 +705,7 @@ func ExampleHtmlGenerate() {
 	// 								</tr>
 	// 							</thead>
 	// 							<tbody>
-								
+
 	// 							<tr>
 	// 								<td style="background-color:#ffffff">
 	// 									<a href="http://d" style="font-size:13px; color:#757ad8">http://d</a>
@@ -719,7 +717,7 @@ func ExampleHtmlGenerate() {
 	// 									<div style="text-align:center; font-size:13px; padding:4px;">200</div>
 	// 								</td>
 	// 							</tr>
-								
+
 	// 							<tr>
 	// 								<td style="background-color:#ffffff">
 	// 									<a href="http://e" style="font-size:13px; color:#757ad8">http://e</a>
@@ -731,16 +729,16 @@ func ExampleHtmlGenerate() {
 	// 									<div style="text-align:center; font-size:13px; padding:4px;">401</div>
 	// 								</td>
 	// 							</tr>
-								
+
 	// 							</tbody>
 	// 						</table>
 	// 					</td>
 	// 				</tr>
-					
+
 	// 				<tr>
 	// 					<td style="background-color:#ECF8FF">
 	// 						<h3 style="color:#757ad8; font-size:14px; font-weight:bold;">
-								
+
 	// 							<em>status:</em> updated
 	// 						</h3>
 	// 						<table width="100%" cellpadding="2" cellspacing="1">
@@ -758,7 +756,7 @@ func ExampleHtmlGenerate() {
 	// 								</tr>
 	// 							</thead>
 	// 							<tbody>
-								
+
 	// 							<tr>
 	// 								<td style="background-color:#ffffff">
 	// 									<a href="http://g" style="font-size:13px; color:#757ad8">http://g</a>
@@ -770,16 +768,14 @@ func ExampleHtmlGenerate() {
 	// 									<div style="text-align:center; font-size:13px; padding:4px;">200</div>
 	// 								</td>
 	// 							</tr>
-								
+
 	// 							</tbody>
 	// 						</table>
 	// 					</td>
 	// 				</tr>
-					
-	// 			</table>
-				
 
-				
+	// 			</table>
+
 	// 			<h2 style="color:#efefef">Latest Scan Results</h2>
 	// 			<h2 style="margin:15px 0 0 0; font-style: italic; background: #757ad8; color: #efefef; padding: 5px 0 5px 10px; font-size:14px; line-height:19px; ">&raquo; latest scan</h2>
 
@@ -807,7 +803,7 @@ func ExampleHtmlGenerate() {
 	// 											</tr>
 	// 										</thead>
 	// 										<tbody>
-											
+
 	// 										<tr>
 	// 											<td style="background-color:#ffffff">
 	// 												<a href="http://a" style="font-size:13px; color:#757ad8">http://a</a>
@@ -819,7 +815,7 @@ func ExampleHtmlGenerate() {
 	// 												<div style="text-align:center; font-size:13px; padding:4px;">200</div>
 	// 											</td>
 	// 										</tr>
-											
+
 	// 										<tr>
 	// 											<td style="background-color:#ffffff">
 	// 												<a href="http://b" style="font-size:13px; color:#757ad8">http://b</a>
@@ -831,7 +827,7 @@ func ExampleHtmlGenerate() {
 	// 												<div style="text-align:center; font-size:13px; padding:4px;">401</div>
 	// 											</td>
 	// 										</tr>
-											
+
 	// 										<tr>
 	// 											<td style="background-color:#ffffff">
 	// 												<a href="http://c" style="font-size:13px; color:#757ad8">http://c</a>
@@ -843,7 +839,7 @@ func ExampleHtmlGenerate() {
 	// 												<div style="text-align:center; font-size:13px; padding:4px;">401</div>
 	// 											</td>
 	// 										</tr>
-											
+
 	// 										</tbody>
 	// 									</table>
 
@@ -950,5 +946,14 @@ func ExampleAsciiGenerate() {
 	// |   URL    | LOCKEDDOWN | STATUS CODE |
 	// +----------+------------+-------------+
 	// | http://g | false      |         200 |
+	// +----------+------------+-------------+
+	// 
+	// [ LATEST SCAN RESULTS ]
+	// +----------+------------+-------------+
+	// |   URL    | LOCKEDDOWN | STATUS CODE |
+	// +----------+------------+-------------+
+	// | http://a | false      |         200 |
+	// | http://b | true       |         401 |
+	// | http://c | true       |         401 |
 	// +----------+------------+-------------+
 }

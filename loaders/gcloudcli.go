@@ -77,32 +77,36 @@ func (l *LoaderGcloudCLI) FetchUrls() ([]string, error) {
 	data := parseProjectsOutput(projectstring)
 	projectsraw := strings.Split(data, "\n")
 	projects := projectsraw[1 : len(projectsraw)-1]
-	for _, project := range projects {
-		if modules, err := execGcloudModules(project); err == nil {
-			if modules == "" {
-				log.Debugf("skipping FetchUrl loop for %s", project)
-				continue
-			}
-			versionsraw := strings.Split(parseModulesOutput(modules), "\n")
-			l := len(versionsraw)
-			if l > 1 {
-				versions := versionsraw[1 : len(versionsraw)-1]
-				// versionscache ensures that we're only testing once per version
-				// (gcloud modules can return multiple results per version)
-				versionscache := make(map[string]bool)
-				for _, version := range versions {
-					if !versionscache[version] {
-						log.Debugf("Found https://%s-dot-%s.appspot.com", version, project)
-						m = append(m, "https://"+version+"-dot-"+project+".appspot.com")
-						versionscache[version] = true
+	done := make(chan bool)
+	go func() {
+		for _, project := range projects {
+			if modules, err := execGcloudModules(project); err == nil {
+				if modules == "" {
+					log.Debugf("skipping FetchUrl loop for %s", project)
+					continue
+				}
+				versionsraw := strings.Split(parseModulesOutput(modules), "\n")
+				l := len(versionsraw)
+				if l > 1 {
+					versions := versionsraw[1 : len(versionsraw)-1]
+					// versionscache ensures that we're only testing once per version
+					// (gcloud modules can return multiple results per version)
+					versionscache := make(map[string]bool)
+					for _, version := range versions {
+						if !versionscache[version] {
+							log.Debugf("Found https://%s-dot-%s.appspot.com", version, project)
+							m = append(m, "https://"+version+"-dot-"+project+".appspot.com")
+							versionscache[version] = true
+						}
 					}
 				}
+			} else {
+				// execGcloudModules failed
+				log.Debugf("execGcloudModules command failed for %s, got:\n", project, err)
 			}
-		} else {
-			// execGcloudModules failed
-			log.Debugf("execGcloudModules command failed for %s, got:\n", project, err)
 		}
-	}
-
+		done <- true
+	}()
+	<-done
 	return m, nil
 }
