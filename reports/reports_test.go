@@ -31,7 +31,7 @@ func init() {
 				Ansii:         "blue+h:black",
 			},
 		},
-		ShowSameState: true,
+		ShowSameState: false,
 	}
 	Rpt.Cfg = cfg
 	// some fake data to use
@@ -881,12 +881,6 @@ func ExampleAsciiGenerate() {
 	// | http://b | true       |         401 |
 	// | http://c | true       |         401 |
 	// +----------+------------+-------------+
-	//  ~ same [since yesterday]
-	// +----------+------------+-------------+
-	// |   URL    | LOCKEDDOWN | STATUS CODE |
-	// +----------+------------+-------------+
-	// | http://l | true       |         401 |
-	// +----------+------------+-------------+
 	//  ~ updated [since yesterday]
 	// +----------+------------+-------------+
 	// |   URL    | LOCKEDDOWN | STATUS CODE |
@@ -910,12 +904,6 @@ func ExampleAsciiGenerate() {
 	// | http://a | false      |         200 |
 	// | http://b | true       |         401 |
 	// | http://c | true       |         401 |
-	// +----------+------------+-------------+
-	//  ~ same [since last week]
-	// +----------+------------+-------------+
-	// |   URL    | LOCKEDDOWN | STATUS CODE |
-	// +----------+------------+-------------+
-	// | http://l | true       |         401 |
 	// +----------+------------+-------------+
 	//  ~ updated [since last week]
 	// +----------+------------+-------------+
@@ -947,7 +935,7 @@ func ExampleAsciiGenerate() {
 	// +----------+------------+-------------+
 	// | http://g | false      |         200 |
 	// +----------+------------+-------------+
-	// 
+	//
 	// [ LATEST SCAN RESULTS ]
 	// +----------+------------+-------------+
 	// |   URL    | LOCKEDDOWN | STATUS CODE |

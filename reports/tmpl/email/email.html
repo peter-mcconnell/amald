@@ -11,6 +11,7 @@
 			<h2 style="margin:15px 0 0 0; font-style: italic; background: #757ad8; color: #efefef; padding: 5px 0 5px 10px; font-size:14px; line-height:19px; ">&raquo; since {{ $d.Title }}</h2>
 			<table width="100%" cellpadding="10" cellspacing="0">
 				{{ range $siT, $summaries := index $.Summaries $siI}}
+				{{ if $.StateKeysByInt $siT }}
 				<tr>
 					<td style="background-color:#ECF8FF">
 						<h3 style="color:#757ad8; font-size:14px; font-weight:bold;">
@@ -32,23 +33,24 @@
 								</tr>
 							</thead>
 							<tbody>
-							{{ range $sd := $summaries }}
-							<tr>
-								<td style="background-color:#ffffff">
-									<a href="{{ $sd.Url }}" style="font-size:13px; color:#757ad8">{{ $sd.Url }}</a>
-								</td>
-								<td style="{{ if $sd.IsLockedDown }}background:#90ea99{{ else }}background:#ff6633;{{ end }}">
-									<div style="text-align:center; font-size:13px; padding:4px;">{{ $sd.IsLockedDown }}</div>
-								</td>
-								<td class="httpcode hc{{ $sd.HttpStatusCode }}">
-									<div style="text-align:center; font-size:13px; padding:4px;">{{ $sd.HttpStatusCode }}</div>
-								</td>
-							</tr>
-							{{ end }}
+								{{ range $sd := $summaries }}
+								<tr>
+									<td style="background-color:#ffffff">
+										<a href="{{ $sd.Url }}" style="font-size:13px; color:#757ad8">{{ $sd.Url }}</a>
+									</td>
+									<td style="{{ if $sd.IsLockedDown }}background:#90ea99{{ else }}background:#ff6633;{{ end }}">
+										<div style="text-align:center; font-size:13px; padding:4px;">{{ $sd.IsLockedDown }}</div>
+									</td>
+									<td class="httpcode hc{{ $sd.HttpStatusCode }}">
+										<div style="text-align:center; font-size:13px; padding:4px;">{{ $sd.HttpStatusCode }}</div>
+									</td>
+								</tr>
+								{{ end }}
 							</tbody>
 						</table>
 					</td>
 				</tr>
+				{{ end }}
 				{{ end }}
 			</table>
 			{{ end }}
@@ -81,19 +83,19 @@
 											</tr>
 										</thead>
 										<tbody>
-										{{ range $sd := .ScanResults }}
-										<tr>
-											<td style="background-color:#ffffff">
-												<a href="{{ $sd.Url }}" style="font-size:13px; color:#757ad8">{{ $sd.Url }}</a>
-											</td>
-											<td style="{{ if $sd.IsLockedDown }}background:#90ea99{{ else }}background:#ff6633;{{ end }}">
-												<div style="text-align:center; font-size:13px; padding:4px;">{{ $sd.IsLockedDown }}</div>
-											</td>
-											<td class="httpcode hc{{ $sd.HttpStatusCode }}">
-												<div style="text-align:center; font-size:13px; padding:4px;">{{ $sd.HttpStatusCode }}</div>
-											</td>
-										</tr>
-										{{ end }}
+											{{ range $sd := .ScanResults }}
+											<tr>
+												<td style="background-color:#ffffff">
+													<a href="{{ $sd.Url }}" style="font-size:13px; color:#757ad8">{{ $sd.Url }}</a>
+												</td>
+												<td style="{{ if $sd.IsLockedDown }}background:#90ea99{{ else }}background:#ff6633;{{ end }}">
+													<div style="text-align:center; font-size:13px; padding:4px;">{{ $sd.IsLockedDown }}</div>
+												</td>
+												<td class="httpcode hc{{ $sd.HttpStatusCode }}">
+													<div style="text-align:center; font-size:13px; padding:4px;">{{ $sd.HttpStatusCode }}</div>
+												</td>
+											</tr>
+											{{ end }}
 										</tbody>
 									</table>
 
