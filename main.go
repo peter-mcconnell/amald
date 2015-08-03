@@ -25,7 +25,7 @@ var (
 )
 
 func init() {
-	// parse flagenikto
+	// parse flags
 	flag.Parse()
 
 	// Set logrus level
