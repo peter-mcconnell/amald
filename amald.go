@@ -9,12 +9,16 @@ import (
 	"github.com/pemcconnell/amald/notifiers"
 	"github.com/pemcconnell/amald/storage"
 	"github.com/pemcconnell/amald/urltest"
+	"time"
 )
 
 // VERSION defines amalds application version
 const VERSION string = "0.0.4"
 
 func main() {
+
+	defs.SetTS(time.Now().UTC().Format(time.RFC3339))
+
 	// capture flags
 	configPath := flag.String("configPath", "./config.yaml",
 		"[config] set the path for the yaml config file. This "+

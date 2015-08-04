@@ -14,6 +14,7 @@ var (
 		"same":    3,
 	}
 	AllowedDistanceHoursOffset = 0.1
+	TS                         string
 )
 
 type Config struct {
@@ -75,13 +76,18 @@ func (r Records) Swap(i, j int) {
 	r.Records[i], r.Records[j] = r.Records[j], r.Records[i]
 }
 
+// SetTS simply sets the timestamp which defs uses to stamp records with
+func SetTS(ts string) {
+	TS = ts
+}
+
 // SiteDefinitionsToRecords takes a series of SiteDefinition and turns them
 // into a format we can use for our storage
 func SiteDefinitionsToRecords(scanResults []SiteDefinition) Records {
 	// combine metadata and scan results, then convert to json
 	records := Records{}
 	records.Records = append(records.Records, Results{
-		Timestamp: time.Now().UTC().Format(time.RFC3339),
+		Timestamp: TS,
 		Results:   scanResults,
 	})
 	return records
