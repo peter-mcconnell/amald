@@ -1,5 +1,6 @@
 # amald
 [![Build Status](https://travis-ci.org/pemcconnell/amald.svg?branch=master)](https://travis-ci.org/pemcconnell/amald)
+[![Coverage Status](https://coveralls.io/repos/pemcconnell/amald/badge.svg?branch=master&service=github)](https://coveralls.io/github/pemcconnell/amald?branch=master)
 
 An app that's designed to monitor urls to see if they are under lockdown. It 
 can load these urls using a combination of the following:
