@@ -15,26 +15,21 @@ const (
 	VERSION string = "0.0.4"
 )
 
-var (
-	configPath = flag.String("configPath", "./config.yaml",
+func main() {
+	// capture flags
+	configPath := flag.String("configPath", "./config.yaml",
 		"[config] set the path for the yaml config file. This defaults to "+
 			"./config.yaml")
-	logLevel = flag.String("logLevel", "info",
+	logLevel := flag.String("logLevel", "info",
 		"[loglevel] set the verbosity of the log levels. Can be: debug, "+
 			"info, warn, error, panic, fatal")
-)
-
-func init() {
-	// parse flags
-	flag.Parse()
 
 	// Set logrus level
 	if level, err := log.ParseLevel(*logLevel); err == nil {
 		log.SetLevel(level)
 	}
-}
-
-func main() {
+	// parse flags
+	flag.Parse()
 
 	// load the config
 	cfg, err := config.Load(*configPath)
