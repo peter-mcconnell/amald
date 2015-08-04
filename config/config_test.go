@@ -20,6 +20,16 @@ func TestLoad(t *testing.T) {
 	}
 }
 
+func TestLoadDefaults(t *testing.T) {
+	testcfg := defs.Config{}
+	cfg, err := LoadDefaults(testcfg)
+	if err == nil {
+		if cfg.Reports == nil {
+			t.Error("Reports not being set by LoadDefaults")
+		}
+	}
+}
+
 func TestLoadersExist(t *testing.T) {
 	if len(cfg.Loaders) == 0 {
 		t.Fatal("Couldn't find any loaders")
