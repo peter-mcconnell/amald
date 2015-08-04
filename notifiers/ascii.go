@@ -12,7 +12,7 @@ type NotifierAscii struct {
 	Cfg         defs.Config
 }
 
-// Send the message via mailgun
+// Fire the Ascii report
 func (n *NotifierAscii) Fire() {
 	log.Debug("Firing Ascii Notifier")
 	r := &reports.Report{

@@ -17,11 +17,11 @@ const VERSION string = "0.0.4"
 func main() {
 	// capture flags
 	configPath := flag.String("configPath", "./config.yaml",
-		"[config] set the path for the yaml config file. This defaults to "+
-			"./config.yaml")
+		"[config] set the path for the yaml config file. This "+
+			"defaults to ./config.yaml")
 	logLevel := flag.String("logLevel", "info",
-		"[loglevel] set the verbosity of the log levels. Can be: debug, "+
-			"info, warn, error, panic, fatal")
+		"[loglevel] set the verbosity of the log levels. Can be: "+
+			"debug, info, warn, error, panic, fatal")
 
 	// Set logrus level
 	if level, err := log.ParseLevel(*logLevel); err == nil {
@@ -57,7 +57,8 @@ func main() {
 
 	// grab a summary (compare current scan against old data)
 	if cfg.Tests["storage"] {
-		olddata, err := storage.LoadSiteDefsFromStorage(cfg.Storage["json"]["path"])
+		olddata, err := storage.LoadSiteDefsFromStorage(
+			cfg.Storage["json"]["path"])
 		if err != nil {
 			log.Fatalf("Failed to get summary: %s", err)
 		}

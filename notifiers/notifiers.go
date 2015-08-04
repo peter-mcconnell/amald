@@ -5,7 +5,10 @@ import (
 	"github.com/pemcconnell/amald/defs"
 )
 
-func FireNotifiers(cfg defs.Config, summaries defs.Summaries, scanResults []defs.SiteDefinition) {
+// FireNotifiers checks the settings in the Config for known report types and
+// calls them if they have been defined
+func FireNotifiers(cfg defs.Config, summaries defs.Summaries,
+	scanResults []defs.SiteDefinition) {
 	log.Debug("Firing notifiers ...")
 
 	// check to see if ascii has been specified in the config

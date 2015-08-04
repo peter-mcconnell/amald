@@ -15,7 +15,7 @@ type NotifierMailgun struct {
 	Cfg         defs.Config
 }
 
-// Send the message via mailgun
+// Fire the Mailgun report (HTML email)
 func (n *NotifierMailgun) Fire() {
 	log.Debug("Firing mailgun notifier")
 	r := reports.Report{
@@ -30,9 +30,13 @@ func (n *NotifierMailgun) Fire() {
 		data.Add("to", config["to"])
 		data.Add("subject", config["subj"])
 		data.Add("html", message)
-		req, err := http.NewRequest("POST", config["domain"]+"/messages", strings.NewReader(data.Encode()))
+		req, err := http.NewRequest(
+			"POST",
+			config["domain"]+"/messages",
+			strings.NewReader(data.Encode()))
 		req.SetBasicAuth("api", config["privatekey"])
-		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+		req.Header.Set("Content-Type",
+			"application/x-www-form-urlencoded")
 		resp, err := client.Do(req)
 		if err != nil {
 			log.Fatal(err)
