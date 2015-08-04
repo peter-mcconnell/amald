@@ -32,22 +32,27 @@ type IntervalSettings struct {
 	Ansii         string `json:"ansii"`
 }
 
+// SiteDefinition is the information amald holds about a single URL
 type SiteDefinition struct {
 	Url            string `json:"url"`
 	IsLockedDown   bool   `json:"islockeddown"`
 	HttpStatusCode int    `json:"httpstatuscode",omitempty`
 }
 
+// Results holds a timestamp for when the scan was ran and the associated
+// SiteDefinitions it found for that scan
 type Results struct {
 	Timestamp string           `json:"timestamp"`
 	Results   []SiteDefinition `json:"results"`
 }
 
+// Records is simply a list of results. This is a reflection of the storage
 type Records struct {
 	Records []Results `json:"records"`
 }
 
-type Analysis map[int][]SiteDefinition // map[int] = 0-3 (deleted, created, updated, same)
+// Analysis should have a key range of 0-3 (deleted, created, updated, same)
+type Analysis map[int][]SiteDefinition
 
 type Summaries map[int]Analysis
 
@@ -70,8 +75,8 @@ func (r Records) Swap(i, j int) {
 	r.Records[i], r.Records[j] = r.Records[j], r.Records[i]
 }
 
-// SiteDefinitionsToRecords takes a series of SiteDefinition and turns them into a format
-// we can use for our storage
+// SiteDefinitionsToRecords takes a series of SiteDefinition and turns them
+// into a format we can use for our storage
 func SiteDefinitionsToRecords(scanResults []SiteDefinition) Records {
 	// combine metadata and scan results, then convert to json
 	records := Records{}
@@ -106,7 +111,8 @@ func AnalyseRecords(cfg Config, r Records) Summaries {
 			// supports the user having more than one entry for a
 			// given distance. not sure this has any value, but
 			// will at least give the user an expected result
-			sikeyref[si.DistanceHours] = append(sikeyref[si.DistanceHours], k)
+			sikeyref[si.DistanceHours] = append(
+				sikeyref[si.DistanceHours], k)
 		}
 	}
 	log.Debugf("SummaryIntervalKeyRef: %+v", sikeyref)
@@ -117,16 +123,20 @@ func AnalyseRecords(cfg Config, r Records) Summaries {
 			dh := int(distance_hours)
 			// if the calculated distance isn't matched, try
 			// offsetting the value
-			if _, ok := sikeyref[dh]; ok {
+			if _, ok := sikeyref[dh]; !ok {
 				dh = FactorOffset(distance_hours)
 			}
 			// has this distance been requested by the user?
 			if _, ok := sikeyref[dh]; ok {
-				log.Debugf("Found record with distance (%d) specified by user: %s", distance_hours, rec.Timestamp)
-				// loop through each iteration of this distance that the user
-				// has provided. this will likely just be the 1 item
+				log.Debugf("Found record with distance (%d) "+
+					"specified by user: %s",
+					distance_hours, rec.Timestamp)
+				// loop through each iteration of this distance
+				// that the user has provided. this will likely
+				// just be the 1 item
 				for _, k := range sikeyref[int(distance_hours)] {
-					summaries[k] = CompareRecords(now.Results, rec.Results)
+					summaries[k] = CompareRecords(
+						now.Results, rec.Results)
 				}
 			}
 		}
@@ -135,6 +145,8 @@ func AnalyseRecords(cfg Config, r Records) Summaries {
 	return summaries
 }
 
+// FactorOffset is designed to allow for 'some give' when comparing timestamps.
+// The offset here is defined by AllowDistanceHoursOffset
 func FactorOffset(x float64) int {
 	if int(x+AllowedDistanceHoursOffset) != int(x) {
 		return int(x + AllowedDistanceHoursOffset)

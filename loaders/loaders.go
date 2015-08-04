@@ -12,6 +12,9 @@ var (
 	loaders = make(map[string]UrlsLoader)
 )
 
+// GetLoaders will check through the activeloaders it's passed and enable them
+// accordingly. This is set up so that these 'loaders' can be enabled via the
+// config.yaml
 func GetLoaders(activeloaders map[string]map[string]string) {
 
 	log.Debugf("get loaders: %+v", activeloaders)

@@ -10,7 +10,7 @@ import (
 )
 
 // LoadConfig returns a Config struct. It builds the config using the provided
-// filepath. loadDefaults called after the yaml file is scanned to assign
+// filepath. LoadDefaults called after the yaml file is scanned to assign
 // defaults if they are needed.
 func Load(path string) (defs.Config, error) {
 	log.Debug("load config")
@@ -44,14 +44,14 @@ func Load(path string) (defs.Config, error) {
 	}
 
 	// merge defaults
-	config, err = loadDefaults(config)
+	config, err = LoadDefaults(config)
 	if err != nil {
 		return config, err
 	}
 
 	// validate storage
 	var valid bool
-	valid, err = validateStorageSettings(config)
+	valid, err = ValidateStorageSettings(config)
 	if err != nil {
 		return config, err
 	}
@@ -62,8 +62,11 @@ func Load(path string) (defs.Config, error) {
 	return config, err
 }
 
-func validateStorageSettings(config defs.Config) (bool, error) {
-	log.Debug("validateStorageSettings")
+// ValidateStorageSettings inspects a Config and returns a boolean based on the
+// Config being valid. This is designed to try and make sure the user has
+// inserted the correct values in their config.yaml
+func ValidateStorageSettings(config defs.Config) (bool, error) {
+	log.Debug("ValidateStorageSettings")
 	var (
 		settingsValidated bool  = false
 		err               error = nil
@@ -73,10 +76,13 @@ func validateStorageSettings(config defs.Config) (bool, error) {
 		log.Debug("storage settings found in config")
 		var spath, err = filepath.Abs(config.Storage["json"]["path"])
 		if err != nil {
-			log.Errorf("Failed to set abs filepath on %s: %s", config.Storage["json"]["path"], err)
+			log.Errorf("Failed to set abs filepath on %s: %s",
+				config.Storage["json"]["path"], err)
 		} else {
 			if _, err = os.Stat(spath); err != nil {
-				log.Errorf("storage settings listed file %s which couldnt be loaded: %s", spath, err)
+				log.Errorf("storage settings listed file %s"+
+					"which couldnt be loaded: %s", spath,
+					err)
 				return settingsValidated, err
 			} else {
 				settingsValidated = true
@@ -86,9 +92,10 @@ func validateStorageSettings(config defs.Config) (bool, error) {
 	return settingsValidated, err
 }
 
-// loadDefaults is a placeholder at the moment. If default values are to be set
-// to cover missing fields from the config yaml then they should be set here.
-func loadDefaults(config defs.Config) (defs.Config, error) {
+// LoadDefaults is a method that allows you to define some default values for
+// the Config. Any missing fields from the config yaml then they should be set
+// here.
+func LoadDefaults(config defs.Config) (defs.Config, error) {
 	if config.Reports == nil {
 		config.Reports = make(map[string]map[string]string)
 	}
