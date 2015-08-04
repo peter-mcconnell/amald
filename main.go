@@ -11,9 +11,8 @@ import (
 	"github.com/pemcconnell/amald/urltest"
 )
 
-const (
-	VERSION string = "0.0.4"
-)
+// VERSION defines amalds application version
+const VERSION string = "0.0.4"
 
 func main() {
 	// capture flags
