@@ -8,8 +8,8 @@ import (
 
 type NotifierAscii struct {
 	ScanResults []defs.SiteDefinition
-	Summaries defs.Summaries
-	Cfg       defs.Config
+	Summaries   defs.Summaries
+	Cfg         defs.Config
 }
 
 // Send the message via mailgun
@@ -17,8 +17,8 @@ func (n *NotifierAscii) Fire() {
 	log.Debug("Firing Ascii Notifier")
 	r := &reports.Report{
 		AnsiColorEnabled: true,
-		Cfg: n.Cfg,
-		ScanResults: n.ScanResults,
+		Cfg:              n.Cfg,
+		ScanResults:      n.ScanResults,
 	}
 	o, err := r.GenerateAscii(n.Summaries)
 	if err != nil {
