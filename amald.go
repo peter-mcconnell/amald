@@ -1,4 +1,4 @@
-package amald
+package main
 
 import (
 	"flag"
