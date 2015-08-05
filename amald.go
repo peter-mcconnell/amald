@@ -27,12 +27,13 @@ func main() {
 		"[loglevel] set the verbosity of the log levels. Can be: "+
 			"debug, info, warn, error, panic, fatal")
 
+	// parse flags
+	flag.Parse()
+
 	// Set logrus level
 	if level, err := log.ParseLevel(*logLevel); err == nil {
 		log.SetLevel(level)
 	}
-	// parse flags
-	flag.Parse()
 
 	// load the config
 	cfg, err := config.Load(*configPath)
