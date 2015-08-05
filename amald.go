@@ -13,7 +13,7 @@ import (
 )
 
 // VERSION defines amalds application version
-const VERSION string = "0.0.4"
+const VERSION string = "0.0.5"
 
 func main() {
 
