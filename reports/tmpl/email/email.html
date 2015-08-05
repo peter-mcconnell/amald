@@ -1,115 +1,101 @@
 {{define "email"}}
 {{ template "header" . }}
-<!-- body -->
 <table width="600" cellpadding="0" cellspacing="0">
+<tr>
+<td style="background-color:#2c2828">
+	<p>&nbsp;</p>
+	<h2 style="color:#efefef; padding-left:10px;">Summary</h2>
+{{ range $siI, $d := .Cfg.SummaryIntervals }}
+	<h2 style="margin:15px 0 0 0; font-style: italic; background: #757ad8; color: #efefef; padding: 5px 0 5px 10px; font-size:14px; line-height:19px; ">&raquo; since {{ $d.Title }}</h2>
+	<table width="100%" cellpadding="10" cellspacing="0">
+{{ range $siT, $summaries := index $.Summaries $siI}}
 	<tr>
-		<td style="background-color:#2c2828">
-			<p>&nbsp;</p>
-			<h2 style="color:#efefef; padding-left:10px;">Summary</h2>
-			<!-- loop summary intervals -->
-			{{ range $siI, $d := .Cfg.SummaryIntervals }}
-			<h2 style="margin:15px 0 0 0; font-style: italic; background: #757ad8; color: #efefef; padding: 5px 0 5px 10px; font-size:14px; line-height:19px; ">&raquo; since {{ $d.Title }}</h2>
-			<table width="100%" cellpadding="10" cellspacing="0">
-				{{ range $siT, $summaries := index $.Summaries $siI}}
-				{{ if $.StateKeysByInt $siT }}
-				<tr>
-					<td style="background-color:#ECF8FF">
-						<h3 style="color:#757ad8; font-size:14px; font-weight:bold;">
-							<!-- state title -->
-							<em>status:</em> {{ index $.StateKeysByInt $siT }}
-						</h3>
-						<table width="100%" cellpadding="2" cellspacing="1">
-							<thead>
-								<tr>
-									<th align="left">
-										<h4 style="color:#757ad8; font-size:14px; font-weight:bold; margin:0;">url</h4>
-									</th>
-									<th align="center" width="104">
-										<h4 style="color:#757ad8; font-size:14px; font-weight:bold; margin:0;">locked down</h4>
-									</th>
-									<th align="center" width="104">
-										<h4 style="color:#757ad8; font-size:14px; font-weight:bold; margin:0;">http code</h4>
-									</th>
-								</tr>
-							</thead>
-							<tbody>
-								{{ range $sd := $summaries }}
-								<tr>
-									<td style="background-color:#ffffff">
-										<a href="{{ $sd.Url }}" style="font-size:13px; color:#757ad8">{{ $sd.Url }}</a>
-									</td>
-									<td style="{{ if $sd.IsLockedDown }}background:#90ea99{{ else }}background:#ff6633;{{ end }}">
-										<div style="text-align:center; font-size:13px; padding:4px;">{{ $sd.IsLockedDown }}</div>
-									</td>
-									<td class="httpcode hc{{ $sd.HttpStatusCode }}">
-										<div style="text-align:center; font-size:13px; padding:4px;">{{ $sd.HttpStatusCode }}</div>
-									</td>
-								</tr>
-								{{ end }}
-							</tbody>
-						</table>
-					</td>
-				</tr>
-				{{ end }}
-				{{ end }}
-			</table>
-			{{ end }}
-
-			<!-- latest scan results -->
-			<h2 style="color:#efefef; padding-left:10px;">Latest Scan Results</h2>
-			<h2 style="margin:15px 0 0 0; font-style: italic; background: #757ad8; color: #efefef; padding: 5px 0 5px 10px; font-size:14px; line-height:19px; ">&raquo; latest scan</h2>
-
-			<table width="600" cellpadding="0" cellspacing="0">
-				<tr>
-					<td style="background-color:#2c2828">
-
-						<table width="100%" cellpadding="10" cellspacing="0">
-
-							<tr>
-								<td style="background-color:#ECF8FF">
-
-									<table width="100%" cellpadding="2" cellspacing="1">
-										<thead>
-											<tr>
-												<th align="left">
-													<h4 style="color:#757ad8; font-size:14px; font-weight:bold; margin:0;">url</h4>
-												</th>
-												<th align="center" width="104">
-													<h4 style="color:#757ad8; font-size:14px; font-weight:bold; margin:0;">locked down</h4>
-												</th>
-												<th align="center" width="104">
-													<h4 style="color:#757ad8; font-size:14px; font-weight:bold; margin:0;">http code</h4>
-												</th>
-											</tr>
-										</thead>
-										<tbody>
-											{{ range $sd := .ScanResults }}
-											<tr>
-												<td style="background-color:#ffffff">
-													<a href="{{ $sd.Url }}" style="font-size:13px; color:#757ad8">{{ $sd.Url }}</a>
-												</td>
-												<td style="{{ if $sd.IsLockedDown }}background:#90ea99{{ else }}background:#ff6633;{{ end }}">
-													<div style="text-align:center; font-size:13px; padding:4px;">{{ $sd.IsLockedDown }}</div>
-												</td>
-												<td class="httpcode hc{{ $sd.HttpStatusCode }}">
-													<div style="text-align:center; font-size:13px; padding:4px;">{{ $sd.HttpStatusCode }}</div>
-												</td>
-											</tr>
-											{{ end }}
-										</tbody>
-									</table>
-
-								</td>
-							</tr>
-
-						</table>
-						<p style="text-align:right; font-size:10px; color:#666">powered by <a href="https://github.com/pemcconnell/amald">amald</a>.</p>
-						<p>&nbsp;</p>
-					</td>
-				</tr>
-			</table>
-
-		</td>
+	<td style="background-color:#ECF8FF">
+		<h3 style="color:#757ad8; font-size:14px; font-weight:bold;">
+			<em>status:</em> {{ index $.StateKeysByInt $siT }}
+		</h3>
+		<table width="100%" cellpadding="2" cellspacing="1">
+		<thead>
+			<tr>
+				<th align="left">
+					<h4 style="color:#757ad8; font-size:14px; font-weight:bold; margin:0;">url</h4>
+				</th>
+				<th align="center" width="104">
+					<h4 style="color:#757ad8; font-size:14px; font-weight:bold; margin:0;">locked down</h4>
+				</th>
+				<th align="center" width="104">
+					<h4 style="color:#757ad8; font-size:14px; font-weight:bold; margin:0;">http code</h4>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+{{ range $sd := $summaries }}
+			<tr>
+				<td style="background-color:#ffffff">
+					<a href="{{ $sd.Url }}" style="font-size:13px; color:#757ad8">{{ $sd.Url }}</a>
+				</td>
+				<td style="{{ if $sd.IsLockedDown }}background:#90ea99{{ else }}background:#ff6633;{{ end }}">
+					<div style="text-align:center; font-size:13px; padding:4px;">{{ $sd.IsLockedDown }}</div>
+				</td>
+				<td class="httpcode hc{{ $sd.HttpStatusCode }}">
+					<div style="text-align:center; font-size:13px; padding:4px;">{{ $sd.HttpStatusCode }}</div>
+				</td>
+			</tr>
+{{ end }}
+		</tbody>
+		</table>
+	</td>
 	</tr>
+{{ end }}
+	</table>
+{{ end }}
+	<h2 style="color:#efefef; padding-left:10px;">Latest Scan Results</h2>
+	<h2 style="margin:15px 0 0 0; font-style: italic; background: #757ad8; color: #efefef; padding: 5px 0 5px 10px; font-size:14px; line-height:19px; ">&raquo; latest scan</h2>
+	<table width="600" cellpadding="0" cellspacing="0">
+	<tr>
+	<td style="background-color:#2c2828">
+		<table width="100%" cellpadding="10" cellspacing="0">
+			<tr>
+				<td style="background-color:#ECF8FF">
+					<table width="100%" cellpadding="2" cellspacing="1">
+					<thead>
+						<tr>
+							<th align="left">
+								<h4 style="color:#757ad8; font-size:14px; font-weight:bold; margin:0;">url</h4>
+							</th>
+							<th align="center" width="104">
+								<h4 style="color:#757ad8; font-size:14px; font-weight:bold; margin:0;">locked down</h4>
+							</th>
+							<th align="center" width="104">
+								<h4 style="color:#757ad8; font-size:14px; font-weight:bold; margin:0;">http code</h4>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+{{ range $sd := .ScanResults }}
+						<tr>
+							<td style="background-color:#ffffff">
+								<a href="{{ $sd.Url }}" style="font-size:13px; color:#757ad8">{{ $sd.Url }}</a>
+							</td>
+							<td style="{{ if $sd.IsLockedDown }}background:#90ea99{{ else }}background:#ff6633;{{ end }}">
+								<div style="text-align:center; font-size:13px; padding:4px;">{{ $sd.IsLockedDown }}</div>
+							</td>
+							<td class="httpcode hc{{ $sd.HttpStatusCode }}">
+								<div style="text-align:center; font-size:13px; padding:4px;">{{ $sd.HttpStatusCode }}</div>
+							</td>
+						</tr>
+{{ end }}
+					</tbody>
+					</table>
+				</td>
+			</tr>
+		</table>
+		<p style="text-align:right; font-size:10px; color:#666">powered by <a href="https://github.com/pemcconnell/amald">amald</a>.</p>
+		<p>&nbsp;</p>
+	</td>
+	</tr>
+	</table>
+</td>
+</tr>
 </table>
 {{ end }}

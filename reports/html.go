@@ -24,10 +24,15 @@ func (r *Report) GenerateHtml(summaries defs.Summaries) (string, error) {
 		StateKeysByInt: map[int]string{},
 	}
 	for s, i := range defs.StateKeys {
-		if s == "same" && r.Cfg.ShowSameState != true {
-			continue
-		}
+		//if s == "same" && r.Cfg.ShowSameState != true {
+		//	continue
+		//}
 		tmpldata.StateKeysByInt[i] = s
+	}
+	if r.Cfg.ShowSameState != true {
+		for k, _ := range tmpldata.Summaries {
+			delete(tmpldata.Summaries[k], defs.StateKeys["same"])
+		}
 	}
 	// now parse our template
 	var doc bytes.Buffer

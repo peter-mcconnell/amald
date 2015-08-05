@@ -125,13 +125,14 @@ func AnalyseRecords(cfg Config, r Records) Summaries {
 	// loop the rest of our records
 	for _, rec := range r.Records[1:] {
 		if distance_hours, err := DistanceHours(now.Timestamp, rec.Timestamp); err == nil {
-			log.Debugf("~disthrs: %d", distance_hours)
+			log.Debugf("~disthrs: %f", distance_hours)
 			dh := int(distance_hours)
 			// if the calculated distance isn't matched, try
 			// offsetting the value
 			if _, ok := sikeyref[dh]; !ok {
 				dh = FactorOffset(distance_hours)
 			}
+			log.Debugf("~dh: %d", dh)
 			// has this distance been requested by the user?
 			if _, ok := sikeyref[dh]; ok {
 				log.Debugf("Found record with distance (%d) "+
