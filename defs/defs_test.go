@@ -117,6 +117,13 @@ func TestDistanceHours(t *testing.T) {
 	} else if d != 720 {
 		t.Errorf("DistanceHours returned an unexpected value: %d", d)
 	}
+
+	if _, err := DistanceHours("blah", "2015-06-14T11:00:00Z"); err == nil {
+		t.Error("Was expecting an error for a")
+	}
+	if _, err := DistanceHours("2015-06-14T11:00:00Z", "blah"); err == nil {
+		t.Error("Was expecting an error for a")
+	}
 }
 
 func TestSiteDefinitionsToRecords(t *testing.T) {

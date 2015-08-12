@@ -195,12 +195,12 @@ func CompareRecords(master, other []SiteDefinition) Analysis {
 func DistanceHours(a, b string) (float64, error) {
 	ta, err := time.Parse(time.RFC3339, a)
 	if err != nil {
-		log.Errorf("Failed to parse time: %s")
+		log.Errorf("Failed to parse time: %s", a)
 		return 0, err
 	}
 	tb, err := time.Parse(time.RFC3339, b)
 	if err != nil {
-		log.Errorf("Failed to parse time: %s")
+		log.Errorf("Failed to parse time: %s", b)
 		return 0, err
 	}
 	return ta.Sub(tb).Hours(), nil
