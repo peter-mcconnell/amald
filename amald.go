@@ -17,7 +17,7 @@ const VERSION string = "0.0.5"
 
 func main() {
 
-	defs.SetTS(time.Now().UTC().Format(time.RFC3339))
+	defs.TS = time.Now().UTC().Format(time.RFC3339)
 
 	// capture flags
 	configPath := flag.String("configPath", "./config.yaml",
