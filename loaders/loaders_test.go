@@ -11,3 +11,15 @@ func TestTextfileLoaderAvailable(t *testing.T) {
 		t.Fatal("textfileLoaderAvailable failed to find known file")
 	}
 }
+
+func TestParseProjectsOutput(t *testing.T) {
+	if parseProjectsOutput("test-name   other-thing  a") != "test-name" {
+		t.Error("Was expecting a different output")
+	}
+}
+
+func TestParseModulesOutput(t *testing.T) {
+	if parseModulesOutput("test-name   other-thing  a") != "other-thing" {
+		t.Error("Was expecting a different output")
+	}
+}
