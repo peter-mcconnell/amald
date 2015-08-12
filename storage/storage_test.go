@@ -33,4 +33,15 @@ func TestLoadSiteDefsFromStorage(t *testing.T) {
 	if err != nil {
 		t.Errorf("Failed to LoadSiteDefsFromStorage: %s", err)
 	}
+	_, err = LoadSiteDefsFromStorage("")
+	if err == nil {
+		t.Error("Should have returned an error for a blank path")
+	}
+}
+
+func TestStoreScan(t *testing.T) {
+	err := StoreScan("", olddata)
+	if err == nil {
+		t.Error("Should have returned an error for a blank path")
+	}
 }

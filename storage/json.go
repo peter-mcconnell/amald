@@ -14,13 +14,13 @@ func StoreScan(path string, data defs.Records) error {
 	// convert map to string
 	jstr, err := json.Marshal(data)
 	if err != nil {
-		log.Fatalf("Failed to Marshal data: %s", err)
+		log.Errorf("Failed to Marshal data: %s", err)
 	}
 
 	// open our storage file so that we can append to it
 	err = ioutil.WriteFile(path, jstr, 0644)
 	if err != nil {
-		log.Fatalf("Failed to writefile: %s", err)
+		log.Errorf("Failed to writefile: %s", err)
 	}
 
 	return err
@@ -40,7 +40,7 @@ func LoadSiteDefsFromStorage(path string) (defs.Records, error) {
 			}
 		}
 	} else {
-		log.Fatalf("Failed to loadStorageDataFromFile: %s", err)
+		log.Errorf("Failed to loadStorageDataFromFile: %s", err)
 	}
 	return summary, err
 }
@@ -51,7 +51,7 @@ func loadStorageDataFromFile(path string) ([]byte, error) {
 	log.Debug("loading storage data from file")
 	f, err := ioutil.ReadFile(path)
 	if err != nil {
-		log.Fatalf("Problem reading file: %s", err)
+		log.Errorf("Problem reading file: %s", err)
 		return f, err
 	} else {
 		log.Debugf("loadStorageDataFromFile results: %s", string(f))
