@@ -10,7 +10,7 @@ import (
 )
 
 // LoadConfig returns a Config struct. It builds the config using the provided
-// filepath. LoadDefaults called after the yaml file is scanned to assign
+// filepath. loadDefaults called after the yaml file is scanned to assign
 // defaults if they are needed.
 func Load(path string) (defs.Config, error) {
 	log.Debug("load config")
@@ -28,30 +28,27 @@ func Load(path string) (defs.Config, error) {
 	}
 	// does file exist?
 	if _, err := os.Stat(path); err != nil {
-		log.Fatal("Config file not found")
+		log.Error("Config file not found")
 		return config, err
 	}
 	// read file
 	yamlFile, err := ioutil.ReadFile(path)
 	if err != nil {
-		log.Fatal("Config file could not be read")
+		log.Error("Config file could not be read")
 		return config, err
 	}
 	// unmarshal
 	if err = yaml.Unmarshal(yamlFile, &config); err != nil {
-		log.Fatal("Config file could not be unmarshalled")
+		log.Error("Config file could not be unmarshalled")
 		return config, err
 	}
 
 	// merge defaults
-	config, err = LoadDefaults(config)
-	if err != nil {
-		return config, err
-	}
+	config = loadDefaults(config)
 
 	// validate storage
 	var valid bool
-	valid, err = ValidateStorageSettings(config)
+	valid, err = validateStorageSettings(config)
 	if err != nil {
 		return config, err
 	}
@@ -62,11 +59,11 @@ func Load(path string) (defs.Config, error) {
 	return config, err
 }
 
-// ValidateStorageSettings inspects a Config and returns a boolean based on the
+// validateStorageSettings inspects a Config and returns a boolean based on the
 // Config being valid. This is designed to try and make sure the user has
 // inserted the correct values in their config.yaml
-func ValidateStorageSettings(config defs.Config) (bool, error) {
-	log.Debug("ValidateStorageSettings")
+func validateStorageSettings(config defs.Config) (bool, error) {
+	log.Debug("validateStorageSettings")
 	var (
 		settingsValidated bool  = false
 		err               error = nil
@@ -92,12 +89,12 @@ func ValidateStorageSettings(config defs.Config) (bool, error) {
 	return settingsValidated, err
 }
 
-// LoadDefaults is a method that allows you to define some default values for
+// loadDefaults is a method that allows you to define some default values for
 // the Config. Any missing fields from the config yaml then they should be set
 // here.
-func LoadDefaults(config defs.Config) (defs.Config, error) {
+func loadDefaults(config defs.Config) defs.Config {
 	if config.Reports == nil {
 		config.Reports = make(map[string]map[string]string)
 	}
-	return config, nil
+	return config
 }

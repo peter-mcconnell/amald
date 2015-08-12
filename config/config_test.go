@@ -11,22 +11,33 @@ var (
 )
 
 func TestLoad(t *testing.T) {
+	// real sample file
 	cfg, err = Load("example.config.yaml")
 	if err != nil {
-		t.Fatalf("encountered error: %s", err)
+		t.Errorf("encountered error: %s", err)
 	}
 	if _, ok := cfg.Global["templatesdir"]; !ok {
-		t.Fatal("templatesdir not set")
+		t.Error("templatesdir not set")
+	}
+
+	// file does not exist
+	_, err = Load("......")
+	if err == nil {
+		t.Error("Should have returned an error for fake file")
+	}
+
+	// golang file for path (expecting yaml)
+	_, err = Load("config_test.go")
+	if err == nil {
+		t.Error("Should have returned an error for fake file")
 	}
 }
 
 func TestLoadDefaults(t *testing.T) {
 	testcfg := defs.Config{}
-	cfg, err := LoadDefaults(testcfg)
-	if err == nil {
-		if cfg.Reports == nil {
-			t.Error("Reports not being set by LoadDefaults")
-		}
+	cfg := loadDefaults(testcfg)
+	if cfg.Reports == nil {
+		t.Error("Reports not being set by LoadDefaults")
 	}
 }
 
@@ -53,24 +64,34 @@ func TestReportsExist(t *testing.T) {
 }
 
 func TestSummaryIntervals(t *testing.T) {
-	// ensure our data reflects what we've put in the example file
-	if cfg.SummaryIntervals[0].Title != "yesterday" {
-		t.Fatalf("SummaryIntervals[0].Title wasn't expected: %s", cfg.SummaryIntervals[0].Title)
-	}
-	if cfg.SummaryIntervals[0].DistanceHours != 24 {
-		t.Fatalf("SummaryIntervals[0].DistanceHours wasn't expected: %s", cfg.SummaryIntervals[0].DistanceHours)
-	}
-	if cfg.SummaryIntervals[1].Title != "last week" {
-		t.Fatalf("SummaryIntervals[1].Title wasn't expected: %s", cfg.SummaryIntervals[1].Title)
-	}
-	if cfg.SummaryIntervals[1].DistanceHours != 168 {
-		t.Fatalf("SummaryIntervals[1].DistanceHours wasn't expected: %s", cfg.SummaryIntervals[1].DistanceHours)
-	}
-	if cfg.SummaryIntervals[2].Title != "last month" {
-		t.Fatalf("SummaryIntervals[2].Title wasn't expected: %s", cfg.SummaryIntervals[2].Title)
-	}
-	if cfg.SummaryIntervals[2].DistanceHours != 720 {
-		t.Fatalf("SummaryIntervals[2].DistanceHours wasn't expected: %s", cfg.SummaryIntervals[2].DistanceHours)
+	if len(cfg.SummaryIntervals) == 0 {
+		t.Error("Can't test any SummaryIntervals (none found)")
+	} else {
+		// ensure our data reflects what we've put in the example file
+		if cfg.SummaryIntervals[0].Title != "yesterday" {
+			t.Errorf("SummaryIntervals[0].Title wasn't expected: %s",
+				cfg.SummaryIntervals[0].Title)
+		}
+		if cfg.SummaryIntervals[0].DistanceHours != 24 {
+			t.Errorf("SummaryIntervals[0].DistanceHours wasn't expected: %s",
+				cfg.SummaryIntervals[0].DistanceHours)
+		}
+		if cfg.SummaryIntervals[1].Title != "last week" {
+			t.Errorf("SummaryIntervals[1].Title wasn't expected: %s",
+				cfg.SummaryIntervals[1].Title)
+		}
+		if cfg.SummaryIntervals[1].DistanceHours != 168 {
+			t.Errorf("SummaryIntervals[1].DistanceHours wasn't expected: %s",
+				cfg.SummaryIntervals[1].DistanceHours)
+		}
+		if cfg.SummaryIntervals[2].Title != "last month" {
+			t.Errorf("SummaryIntervals[2].Title wasn't expected: %s",
+				cfg.SummaryIntervals[2].Title)
+		}
+		if cfg.SummaryIntervals[2].DistanceHours != 720 {
+			t.Errorf("SummaryIntervals[2].DistanceHours wasn't expected: %s",
+				cfg.SummaryIntervals[2].DistanceHours)
+		}
 	}
 
 }
@@ -106,5 +127,17 @@ func TestStorage(t *testing.T) {
 	if _, ok := cfg.Storage["json"]; !ok {
 		t.Fatal("Couldn't find the json storage")
 	}
+}
 
+func TestValidateStorageSettings(t *testing.T) {
+	tmpcfg := cfg
+	tmpcfg.Storage["json"]["path"] = "....."
+	valid, err := validateStorageSettings(tmpcfg)
+	if valid && (err != nil) {
+		t.Errorf("validateStorageSettings should not be valid with an "+
+			"error: %+v", err)
+	}
+	if valid {
+		t.Error("Should have failed with no path")
+	}
 }
