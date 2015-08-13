@@ -10,6 +10,7 @@ type NotifierAscii struct {
 	ScanResults []defs.SiteDefinition
 	Summaries   defs.Summaries
 	Cfg         defs.Config
+	TestMode    bool
 }
 
 // Fire the Ascii report

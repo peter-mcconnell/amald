@@ -38,11 +38,17 @@ func (r *Report) GenerateHtml(summaries defs.Summaries) (string, error) {
 	var doc bytes.Buffer
 	dir := r.Cfg.Global["templatesdir"]
 	if dir == "" {
-		log.Fatal("global > templatesdir not set in config")
+		log.Error("global > templatesdir not set in config")
 	}
-	tmpl := template.Must(template.ParseGlob(dir + "email/*.html"))
-	if err := tmpl.ExecuteTemplate(&doc, "email", tmpldata); err != nil {
-		log.Fatalf("Error running ParseFiles: %s", err)
+	// avoid panic by calling parseglob first then passing each into tmpl
+	if tmpl, err := template.ParseGlob(dir + "email/*.html"); err != nil {
+		log.Error(err)
+		return "", err
+	} else {
+		tmpl := template.Must(tmpl, err)
+		if err := tmpl.ExecuteTemplate(&doc, "email", tmpldata); err != nil {
+			log.Fatalf("Error running ParseFiles: %s", err)
+		}
+		return doc.String(), nil
 	}
-	return doc.String(), nil
 }

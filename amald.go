@@ -76,5 +76,5 @@ func main() {
 	summaries := defs.AnalyseRecords(cfg, records)
 
 	// fire off each notifier
-	notifiers.FireNotifiers(cfg, summaries, scanResults)
+	notifiers.FireNotifiers(cfg, summaries, scanResults, false)
 }

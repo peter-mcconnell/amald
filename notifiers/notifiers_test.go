@@ -6,12 +6,13 @@ import (
 )
 
 var (
-	AsciiN   NotifierAscii
-	MailgunN NotifierMailgun
+	AsciiN          NotifierAscii
+	MailgunN        NotifierMailgun
+	TestScanResults []defs.SiteDefinition
 )
 
 func init() {
-	TestScanResults := []defs.SiteDefinition{
+	TestScanResults = []defs.SiteDefinition{
 		defs.SiteDefinition{
 			Url:            "blah",
 			IsLockedDown:   false,
@@ -35,12 +36,43 @@ func init() {
 	}
 	AsciiN = NotifierAscii{
 		ScanResults: TestScanResults,
+		TestMode:    true,
 	}
-	MailgunN = NotifierMailgun{}
+	MailgunN = NotifierMailgun{
+		ScanResults: TestScanResults,
+		TestMode:    true,
+	}
 }
 
 func TestAsciiFire(t *testing.T) {
 	if err := AsciiN.Fire(); err != nil {
 		t.Errorf("Got unexpected error: %s")
+	}
+}
+
+func TestMailgunFire(t *testing.T) {
+	if err := AsciiN.Fire(); err != nil {
+		t.Errorf("Got unexpected error: %s")
+	}
+}
+
+func TestNotifiers(t *testing.T) {
+	cfg := defs.Config{
+		Reports: map[string]map[string]string{
+			"ascii": map[string]string{
+				"a": "b",
+			},
+			"mailgun": map[string]string{
+				"a": "b",
+			},
+		},
+	}
+	summaries := make(defs.Summaries, 0)
+	fired := FireNotifiers(cfg, summaries, TestScanResults, true)
+	if _, ok := fired["ascii"]; !ok {
+		t.Error("FireNotifiers didnt fire ascii")
+	}
+	if _, ok := fired["mailgun"]; !ok {
+		t.Error("FireNotifiers didnt fire mailgun")
 	}
 }

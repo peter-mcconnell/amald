@@ -13,6 +13,7 @@ type NotifierMailgun struct {
 	ScanResults []defs.SiteDefinition
 	Summaries   defs.Summaries
 	Cfg         defs.Config
+	TestMode    bool
 }
 
 // Fire the Mailgun report (HTML email)
@@ -22,12 +23,18 @@ func (n *NotifierMailgun) Fire() error {
 		Cfg:         n.Cfg,
 		ScanResults: n.ScanResults,
 	}
-	if message, err := r.GenerateHtml(n.Summaries); err == nil {
+	if message, err := r.GenerateHtml(n.Summaries); err != nil {
+		log.Error(err)
+	} else {
 		config := n.Cfg.Reports["mailgun"]
 		client := &http.Client{}
+		to := config["to"]
+		if n.TestMode {
+			to += "&o:testmode=true"
+		}
 		data := url.Values{}
 		data.Add("from", config["from"])
-		data.Add("to", config["to"])
+		data.Add("to", to)
 		data.Add("subject", config["subj"])
 		data.Add("html", message)
 		req, err := http.NewRequest(
