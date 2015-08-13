@@ -16,7 +16,7 @@ type NotifierMailgun struct {
 }
 
 // Fire the Mailgun report (HTML email)
-func (n *NotifierMailgun) Fire() {
+func (n *NotifierMailgun) Fire() error {
 	log.Debug("Firing mailgun notifier")
 	r := reports.Report{
 		Cfg:         n.Cfg,
@@ -37,14 +37,19 @@ func (n *NotifierMailgun) Fire() {
 		req.SetBasicAuth("api", config["privatekey"])
 		req.Header.Set("Content-Type",
 			"application/x-www-form-urlencoded")
-		resp, err := client.Do(req)
 		if err != nil {
-			log.Fatal(err)
+			log.Error(err)
+			return err
 		}
-		if resp.StatusCode != 200 {
-			log.Fatal(resp)
+		if resp, err := client.Do(req); err != nil {
+			log.Error(err)
+			return err
+		} else if resp.StatusCode != 200 {
+			log.Error(resp)
+			return err
 		} else {
 			log.Info("Mailgun notification sent!")
 		}
 	}
+	return nil
 }

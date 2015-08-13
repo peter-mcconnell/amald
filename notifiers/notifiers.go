@@ -8,8 +8,10 @@ import (
 // FireNotifiers checks the settings in the Config for known report types and
 // calls them if they have been defined
 func FireNotifiers(cfg defs.Config, summaries defs.Summaries,
-	scanResults []defs.SiteDefinition) {
+	scanResults []defs.SiteDefinition) []string {
 	log.Debug("Firing notifiers ...")
+
+	fired := make([]string, 0)
 
 	// check to see if ascii has been specified in the config
 	if _, ok := cfg.Reports["ascii"]; ok {
@@ -18,7 +20,11 @@ func FireNotifiers(cfg defs.Config, summaries defs.Summaries,
 			Summaries:   summaries,
 			Cfg:         cfg,
 		}
-		n.Fire()
+		if err := n.Fire(); err != nil {
+			log.Errorf("Failed to fire: %s", err)
+		} else {
+			fired = append(fired, "ascii")
+		}
 	}
 
 	// check to see if mailgun has been specified in the config
@@ -28,6 +34,12 @@ func FireNotifiers(cfg defs.Config, summaries defs.Summaries,
 			Summaries:   summaries,
 			Cfg:         cfg,
 		}
-		n.Fire()
+		if err := n.Fire(); err != nil {
+			log.Errorf("Failed to fire: %s", err)
+		} else {
+			fired = append(fired, "mailgun")
+		}
 	}
+
+	return fired
 }

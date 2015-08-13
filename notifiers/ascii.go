@@ -13,16 +13,18 @@ type NotifierAscii struct {
 }
 
 // Fire the Ascii report
-func (n *NotifierAscii) Fire() {
+func (n *NotifierAscii) Fire() error {
 	log.Debug("Firing Ascii Notifier")
 	r := &reports.Report{
 		AnsiColorEnabled: true,
 		Cfg:              n.Cfg,
 		ScanResults:      n.ScanResults,
 	}
-	o, err := r.GenerateAscii(n.Summaries)
-	if err != nil {
-		log.Fatalf("failed to generate ascii report: %s", err)
+	if o, err := r.GenerateAscii(n.Summaries); err != nil {
+		log.Errorf("Failed to generate ascii report: %s", err)
+		return err
+	} else {
+		log.Infof("\n%s", o)
 	}
-	log.Infof("\n%s", o)
+	return nil
 }
