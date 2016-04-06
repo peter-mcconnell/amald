@@ -59,3 +59,7 @@ PR's welcome :)
 
 
 ~ amald == are my apps locked down?
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/pemcconnell/amald/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
