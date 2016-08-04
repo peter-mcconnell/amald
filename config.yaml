@@ -1,0 +1,34 @@
+ignoreunchanged: false
+templates:
+  - type: html
+    opts:
+      dir: "./reports/tmpl/"
+loaders:
+  - type: gcloudcli
+  - type: textfile
+    opts: 
+      path: "urls.txt"
+intervals:
+  - title: "yesterday"
+    distancehours: 24
+    color: "green"
+  - title: "last week"
+    distancehours: 168
+    color: "red"
+  - title: "last month"
+    distancehours: 720
+    color: "blue"
+reports:
+  - type: ascii
+  - type: mailgun
+    opts:
+      privatekey: "api:something"
+      domain: "something.com"
+      from: "Lockdown Tracker <postmaster@something.com>"
+      to: "Sysadmins <sysadmin@something.com>"
+      subj: "Lockdown status report"
+storage:
+  - type: json
+    opts:
+      path: "../tmp/data.json" # folder must exist
+      recordlimit: 100 # careful: this could truncate an existing file
